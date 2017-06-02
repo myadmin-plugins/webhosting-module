@@ -15,11 +15,11 @@ return [
 	'version' => '1.0.0',
 	'type' => 'addon',
 	'hooks' => [
-		'vps.load_addons' => ['Detain\MyAdminVpsWebhosting\Plugin', 'Load'],
-		/* 'function.requirements' => ['Detain\MyAdminVpsWebhosting\Plugin', 'Requirements'],
-		'licenses.settings' => ['Detain\MyAdminVpsWebhosting\Plugin', 'Settings'],
-		'licenses.activate' => ['Detain\MyAdminVpsWebhosting\Plugin', 'Activate'],
-		'licenses.change_ip' => ['Detain\MyAdminVpsWebhosting\Plugin', 'ChangeIp'],
-		'ui.menu' => ['Detain\MyAdminVpsWebhosting\Plugin', 'Menu'] */
+		'vps.load_addons' => ['Detain\MyAdminWebhosting\Plugin', 'Load'],
+		/* 'function.requirements' => ['Detain\MyAdminWebhosting\Plugin', 'Requirements'],
+		'licenses.settings' => ['Detain\MyAdminWebhosting\Plugin', 'Settings'],
+		'licenses.activate' => ['Detain\MyAdminWebhosting\Plugin', 'Activate'],
+		'licenses.change_ip' => ['Detain\MyAdminWebhosting\Plugin', 'ChangeIp'],
+		'ui.menu' => ['Detain\MyAdminWebhosting\Plugin', 'Menu'] */
 	],
 ];
