@@ -24,6 +24,6 @@
 	"detain/webhosting-licensing": "*"
     },
     "autoload": {
-        "psr-4": {"Detain\\MyAdminVpsWebhosting\": "src/"}
+        "psr-4": {"Detain\\MyAdminVpsWebhosting\\": "src/"}
     }
 }
