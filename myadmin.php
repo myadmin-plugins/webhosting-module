@@ -15,7 +15,7 @@ return [
 	'version' => '1.0.0',
 	'type' => 'addon',
 	'hooks' => [
-		'vps.load_addons' => ['Detain\MyAdminWebhosting\Plugin', 'Load'],
+		'vps.load_processing' => ['Detain\MyAdminWebhosting\Plugin', 'Load'],
 		/* 'function.requirements' => ['Detain\MyAdminWebhosting\Plugin', 'Requirements'],
 		'licenses.settings' => ['Detain\MyAdminWebhosting\Plugin', 'Settings'],
 		'licenses.activate' => ['Detain\MyAdminWebhosting\Plugin', 'Activate'],
