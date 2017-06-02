@@ -1,7 +1,7 @@
 {
-    "name": "detain/myadmin-webhosting-vps-addon",
+    "name": "detain/myadmin-webhosting-module",
     "type": "myadmin-plugin",
-    "description": "Webhosting Addon for VPS Module in MyAdmin",
+    "description": "Webhosting Module for MyAdmin",
     "keywords": ["webhosting","administration","license"],
     "license": "LGPL-2.1",
     "authors": [
@@ -24,6 +24,6 @@
 	"detain/webhosting-licensing": "*"
     },
     "autoload": {
-        "psr-4": {"Detain\\MyAdminVpsWebhosting\\": "src/"}
+        "psr-4": {"Detain\\MyAdminWebhosting\\": "src/"}
     }
 }
