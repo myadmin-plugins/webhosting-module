@@ -5,7 +5,7 @@
  - add way to call/hook into install/uninstall
 */
 return [
-	'name' => 'MyAdmin Webhosting Module for MyAdmin',
+	'name' => 'Webhosting Module',
 	'description' => 'Allows selling of Webhosting Module',
 	'help' => '',
 	'module' => 'webhosting',
