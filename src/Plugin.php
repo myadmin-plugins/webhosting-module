@@ -18,8 +18,8 @@ class Plugin {
 
 	public static function Hooks() {
 		return [
-			'webhosting.load_processing' => ['Detain\MyAdminWebhosting\Plugin', 'Load'],
-			'webhosting.settings' => ['Detain\MyAdminWebhosting\Plugin', 'Settings'],
+			'webhosting.load_processing' => [__CLASS__, 'Load'],
+			'webhosting.settings' => [__CLASS__, 'Settings'],
 		];
 	}
 
