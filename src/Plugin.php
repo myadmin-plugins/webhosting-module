@@ -6,7 +6,21 @@ use Symfony\Component\EventDispatcher\GenericEvent;
 
 class Plugin {
 
+	public static $name = 'Webhosting Module';
+	public static $description = 'Allows selling of Webhosting Module';
+	public static $help = '';
+	public static $module = 'webhosting';
+	public static $type = 'module';
+
+
 	public function __construct() {
+	}
+
+	public static function Hooks() {
+		return [
+			'webhosting.load_processing' => ['Detain\MyAdminWebhosting\Plugin', 'Load'],
+			'webhosting.settings' => ['Detain\MyAdminWebhosting\Plugin', 'Settings'],
+		];
 	}
 
 	public static function Load(GenericEvent $event) {
