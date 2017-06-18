@@ -19,7 +19,7 @@ class Plugin {
 	public static function getHooks() {
 		return [
 			'webhosting.load_processing' => [__CLASS__, 'Load'],
-			'webhosting.settings' => [__CLASS__, 'Settings'],
+			'webhosting.settings' => [__CLASS__, 'getSettings'],
 		];
 	}
 
@@ -27,7 +27,7 @@ class Plugin {
 
 	}
 
-	public static function Settings(GenericEvent $event) {
+	public static function getSettings(GenericEvent $event) {
 		$module = 'webhosting';
 		$settings = $event->getSubject();
 		$settings->add_select_master($module, 'Default Servers', $module, 'new_website_server', 'Default Setup Server', NEW_WEBSITE_SERVER);
