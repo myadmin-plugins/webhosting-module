@@ -103,6 +103,6 @@ class Plugin {
 		$settings->add_dropdown_setting($module, 'Reseller ACLs', 'cpanel_package_defaults_reseller_acl_suspend_acct', 'Reseller ACL Suspend Acct', 'Allow the reseller to Suspend Accounts.', (defined('CPANEL_PACKAGE_DEFAULTS_RESELLER_ACL_SUSPEND_ACCT') ? CPANEL_PACKAGE_DEFAULTS_RESELLER_ACL_SUSPEND_ACCT : 1), array('0', '1'), array('No', 'Yes'));
 		$settings->add_dropdown_setting($module, 'Reseller ACLs', 'cpanel_package_defaults_reseller_acl_upgrade_account', 'Reseller ACL Upgrade Account', 'Allow the reseller to upgrade and downgrade Accounts.', (defined('CPANEL_PACKAGE_DEFAULTS_RESELLER_ACL_UPGRADE_ACCOUNT') ? CPANEL_PACKAGE_DEFAULTS_RESELLER_ACL_UPGRADE_ACCOUNT : 1), array('0', '1'), array('No', 'Yes'));
 		$settings->add_text_setting($module, 'Reseller ACLs', 'cpanel_package_defaults_reseller_acllist', 'CPanel Package Defaults Reseller - ACL List', '', (defined('CPANEL_PACKAGE_DEFAULTS_RESELLER_ACLLIST') ? CPANEL_PACKAGE_DEFAULTS_RESELLER_ACLLIST : 'reseller'));
-		$settings->add_select_master_autosetup($module, 'Auto-Setup Servers', $module, 'setup_servers', 'Auto-Setup Servers:', '<p>Choose which servers are used for auto-server Setups.</p>');
+		$settings->add_select_master_autosetup($module, 'Auto-Setup Servers', $module, 'webhosting_setup_servers', 'Auto-Setup Servers:', '<p>Choose which servers are used for auto-server Setups.</p>');
 	}
 }
