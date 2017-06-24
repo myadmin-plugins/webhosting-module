@@ -18,12 +18,12 @@ class Plugin {
 
 	public static function getHooks() {
 		return [
-			'webhosting.load_processing' => [__CLASS__, 'Load'],
+			'webhosting.load_processing' => [__CLASS__, 'loadProcessing'],
 			'webhosting.settings' => [__CLASS__, 'getSettings'],
 		];
 	}
 
-	public static function Load(GenericEvent $event) {
+	public static function loadProcessing(GenericEvent $event) {
 
 	}
 
