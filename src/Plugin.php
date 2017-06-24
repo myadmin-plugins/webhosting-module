@@ -13,8 +13,8 @@ class Plugin {
 	public static $type = 'module';
 	public static $settings = [
 		'SERVICE_ID_OFFSET' => 1000,
-		'USE_REPEAT_INVOICE' => true,
-		'USE_PACKAGES' => true,
+		'USE_REPEAT_INVOICE' => TRUE,
+		'USE_PACKAGES' => TRUE,
 		'BILLING_DAYS_OFFSET' => 0,
 		'IMGNAME' => 'paper_content_chart_48.png',
 		'REPEAT_BILLING_METHOD' => PRORATE_BILLING,
@@ -45,23 +45,23 @@ class Plugin {
 		$service = $event->getSubject();
 		$service->setModule(self::$module)
 			->set_enable(function($service) {
-				$serviceTypes = run_event('get_service_types', false, self::$module);
+				$serviceTypes = run_event('get_service_types', FALSE, self::$module);
 				$serviceInfo = $service->getServiceInfo();
 				$settings = get_module_settings(self::$module);
 				$db = get_module_db(self::$module);
 				function_requirements('website_create');
 				$success = website_create($serviceInfo[$settings['PREFIX'].'_id'], $serviceInfo[$settings['PREFIX'].'_type'], $serviceInfo[$settings['PREFIX'].'_hostname'], website_get_password($serviceInfo[$settings['PREFIX'].'_id']));
-				if ($success !== false) {
+				if ($success !== FALSE) {
 					$db->query("update {$settings['TABLE']} set {$settings['PREFIX']}_status='active' where {$settings['PREFIX']}_id='{$serviceInfo[$settings['PREFIX'].'_id']}'", __LINE__, __FILE__);
 					$GLOBALS['tf']->history->add($settings['PREFIX'], 'change_status', 'active', $serviceInfo[$settings['PREFIX'].'_id'], $serviceInfo[$settings['PREFIX'].'_custid']);
 					function_requirements('admin_email_website_pending_setup');
 					admin_email_website_pending_setup($serviceInfo[$settings['PREFIX'].'_id']);
 				} else {
 					// there was an error setting up the website, email us about it.
-					admin_mail('Error Setting Up Website ' . $serviceInfo[$settings['PREFIX'].'_id'], 'There was an error setting up the website.  Please look into it and fix.', false, 'my@interserver.net', 'admin_email_setup_error.tpl');
+					admin_mail('Error Setting Up Website ' . $serviceInfo[$settings['PREFIX'].'_id'], 'There was an error setting up the website.  Please look into it and fix.', FALSE, 'my@interserver.net', 'admin_email_setup_error.tpl');
 				}
 			})->set_reactivate(function($service) {
-				$serviceTypes = run_event('get_service_types', false, self::$module);
+				$serviceTypes = run_event('get_service_types', FALSE, self::$module);
 				$serviceInfo = $service->getServiceInfo();
 				$settings = get_module_settings(self::$module);
 				$db = get_module_db(self::$module);
@@ -76,7 +76,7 @@ class Plugin {
 					$serverdata = $db->Record;
 					$hash = $serverdata[$settings['PREFIX'].'_key'];
 					$ip = $serverdata[$settings['PREFIX'].'_ip'];
-					$success = true;
+					$success = TRUE;
 					$extra = run_event('parse_service_extra', $serviceInfo[$settings['PREFIX'] . '_extra'], self::$module);
 					switch ($serviceTypes[$serviceInfo[$settings['PREFIX'] . '_type']]['services_category']) {
 						// Parallels Plesk Automation
@@ -87,7 +87,7 @@ class Plugin {
 								$msg = 'Blank/Empty Plesk Subscription Info, Email support@interserver.net about this';
 								dialog('Error', $msg);
 								myadmin_log(self::$module, 'info', $msg, __LINE__, __FILE__);
-								$success = false;
+								$success = FALSE;
 							} else {
 								list($account_id, $user_id, $subscription_id, $webspace_id) = $extra;
 								require_once(INCLUDE_ROOT . '/webhosting/class.pleskautomation.php');
@@ -128,10 +128,10 @@ class Plugin {
 							$vesta = new \VestaCP($ip, $user, $pass);
 							myadmin_log(self::$module, 'info', "Calling vesta->unsuspend_account({$serviceInfo[$settings['PREFIX'] . '_username']})", __LINE__, __FILE__);
 							if ($vesta->unsuspend_account($serviceInfo[$settings['PREFIX'] . '_username'])) {
-								myadmin_log(self::$module, 'info', 'Success, Response: ' . var_export($vesta->response, true), __LINE__, __FILE__);
+								myadmin_log(self::$module, 'info', 'Success, Response: ' . var_export($vesta->response, TRUE), __LINE__, __FILE__);
 							} else {
-								myadmin_log(self::$module, 'info', 'Failure, Response: ' . var_export($vesta->response, true), __LINE__, __FILE__);
-								$success = false;
+								myadmin_log(self::$module, 'info', 'Failure, Response: ' . var_export($vesta->response, TRUE), __LINE__, __FILE__);
+								$success = FALSE;
 							}
 							break;
 						// cPanel/WHM
@@ -151,13 +151,13 @@ class Plugin {
 							//$whm = whm_api('faith.interserver.net');
 							$field1 = explode(',', $serviceTypes[$serviceInfo[$settings['PREFIX'] . '_type']]['services_field1']);
 							if (in_array('reseller', $field1))
-								$response = json_decode($whm->unsuspendreseller($serviceInfo[$settings['PREFIX'] . '_username']), true);
+								$response = json_decode($whm->unsuspendreseller($serviceInfo[$settings['PREFIX'] . '_username']), TRUE);
 							else
-								$response = json_decode($whm->unsuspendacct($serviceInfo[$settings['PREFIX'] . '_username']), true);
+								$response = json_decode($whm->unsuspendacct($serviceInfo[$settings['PREFIX'] . '_username']), TRUE);
 							myadmin_log(self::$module, 'info', json_encode($response), __LINE__, __FILE__);
 							break;
 					}
-					if ($success == true) {
+					if ($success == TRUE) {
 						$GLOBALS['tf']->history->add($settings['PREFIX'], 'change_status', 'active', $serviceInfo[$settings['PREFIX'].'_id'], $serviceInfo[$settings['PREFIX'].'_custid']);
 						$db->query("update {$settings['TABLE']} set {$settings['PREFIX']}_status='active' where {$settings['PREFIX']}_id='{$serviceInfo[$settings['PREFIX'].'_id']}'", __LINE__, __FILE__);
 					}
@@ -166,7 +166,7 @@ class Plugin {
 				$smarty->assign('website_name', $serviceTypes[$serviceInfo[$settings['PREFIX'].'_type']]['services_name']);
 				$email = $smarty->fetch('email/admin_email_website_reactivated.tpl');
 				$subject = $serviceInfo[$settings['TITLE_FIELD']].' '.$serviceTypes[$serviceInfo[$settings['PREFIX'].'_type']]['services_name'].' '.$settings['TBLNAME'].' Re-Activated';
-				admin_mail($subject, $email, false, false, 'admin_email_website_reactivated.tpl');
+				admin_mail($subject, $email, FALSE, FALSE, 'admin_email_website_reactivated.tpl');
 			})->set_disable(function($service) {
 			})->register();
 
