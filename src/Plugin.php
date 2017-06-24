@@ -54,6 +54,7 @@ class Plugin {
 				if ($success !== false) {
 					$db->query("update {$settings['TABLE']} set {$settings['PREFIX']}_status='active' where {$settings['PREFIX']}_id='{$serviceInfo[$settings['PREFIX'].'_id']}'", __LINE__, __FILE__);
 					$GLOBALS['tf']->history->add($settings['PREFIX'], 'change_status', 'active', $serviceInfo[$settings['PREFIX'].'_id'], $serviceInfo[$settings['PREFIX'].'_custid']);
+					function_requirements('admin_email_website_pending_setup');
 					admin_email_website_pending_setup($serviceInfo[$settings['PREFIX'].'_id']);
 				} else {
 					// there was an error setting up the website, email us about it.
@@ -65,6 +66,7 @@ class Plugin {
 				$settings = get_module_settings(self::$module);
 				$db = get_module_db(self::$module);
 				if ($serviceInfo[$settings['PREFIX'].'_server_status'] === 'deleted' || $serviceInfo[$settings['PREFIX'].'_ip'] == '' || (isset($serviceInfo[$settings['PREFIX'].'_username']) && $serviceInfo[$settings['PREFIX'].'_username'] == '')) {
+					function_requirements('website_create');
 					$success = website_create($serviceInfo[$settings['PREFIX'].'_id'], $serviceInfo[$settings['PREFIX'].'_type'], $serviceInfo[$settings['PREFIX'].'_hostname'], website_get_password($serviceInfo[$settings['PREFIX'].'_id']));
 					$GLOBALS['tf']->history->add($settings['PREFIX'], 'change_status', 'active', $serviceInfo[$settings['PREFIX'].'_id'], $serviceInfo[$settings['PREFIX'].'_custid']);
 					$db->query("update {$settings['TABLE']} set {$settings['PREFIX']}_status='active' where {$settings['PREFIX']}_id='{$serviceInfo[$settings['PREFIX'].'_id']}'", __LINE__, __FILE__);
