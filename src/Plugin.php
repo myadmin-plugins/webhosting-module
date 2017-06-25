@@ -71,99 +71,17 @@ class Plugin {
 					$GLOBALS['tf']->history->add($settings['PREFIX'], 'change_status', 'active', $serviceInfo[$settings['PREFIX'].'_id'], $serviceInfo[$settings['PREFIX'].'_custid']);
 					$db->query("update {$settings['TABLE']} set {$settings['PREFIX']}_status='active' where {$settings['PREFIX']}_id='{$serviceInfo[$settings['PREFIX'].'_id']}'", __LINE__, __FILE__);
 				} else {
-
-
-
-					$db->query("select * from {$settings['PREFIX']}_masters where {$settings['PREFIX']}_id='{$serviceInfo[$settings['PREFIX'].'_server']}'", __LINE__, __FILE__);
-					$db->next_record(MYSQL_ASSOC);
-					$serverdata = $db->Record;
-					$hash = $serverdata[$settings['PREFIX'].'_key'];
-					$ip = $serverdata[$settings['PREFIX'].'_ip'];
-					$success = TRUE;
-					$extra = run_event('parse_service_extra', $serviceInfo[$settings['PREFIX'].'_extra'], self::$module);
-					switch ($serviceTypes[$serviceInfo[$settings['PREFIX'].'_type']]['services_category']) {
-						// Parallels Plesk Automation
-						case SERVICE_TYPES_WEB_PPA:
-							if (sizeof($extra) == 0)
-								$extra = get_plesk_info_from_domain($serviceInfo[$settings['PREFIX'].'_hostname']);
-							if (sizeof($extra) == 0) {
-								$msg = 'Blank/Empty Plesk Subscription Info, Email support@interserver.net about this';
-								dialog('Error', $msg);
-								myadmin_log(self::$module, 'info', $msg, __LINE__, __FILE__);
-								$success = FALSE;
-							} else {
-								list($account_id, $user_id, $subscription_id, $webspace_id) = $extra;
-								require_once(INCLUDE_ROOT.'/webhosting/class.pleskautomation.php');
-								$ppaConnector = get_webhosting_ppa_instance($serverdata);
-								$request = array(
-									'subscription_id' => $subscription_id,
-								);
-								$result = $ppaConnector->enableSubscription($request);
-								//echo "Result:";var_dump($result);echo "\n";
-								try {
-									\PPAConnector::checkResponse($result);
-								} catch (Exception $e) {
-									echo 'Caught exception: '.$e->getMessage() . "\n";
-								}
-								myadmin_log(self::$module, 'info', 'enableSubscription Called got '.json_encode($result), __LINE__, __FILE__);
-							}
-							break;
-						// Parallels Plesk
-						case SERVICE_TYPES_WEB_PLESK:
-							$plesk = get_webhosting_plesk_instance($serverdata);
-							list($user_id, $subscription_id) = $extra;
-							$request = array(
-								'username' => $serviceInfo[$settings['PREFIX'].'_username'],
-								'status' => 0,
-							);
-							try {
-								$result = $plesk->update_client($request);
-							} catch (Exception $e) {
-								echo 'Caught exception: '.$e->getMessage() . "\n";
-							}
-							myadmin_log(self::$module, 'info', 'update_client Called got '.json_encode($result), __LINE__, __FILE__);
-							break;
-						// VestaCP
-						case SERVICE_TYPES_WEB_VESTA:
-							$data = $GLOBALS['tf']->accounts->read($serviceInfo[$settings['PREFIX'].'_custid']);
-							list($user, $pass) = explode(':', $hash);
-							require_once(INCLUDE_ROOT.'/webhosting/VestaCP.php');
-							$vesta = new \VestaCP($ip, $user, $pass);
-							myadmin_log(self::$module, 'info', "Calling vesta->unsuspend_account({$serviceInfo[$settings['PREFIX'].'_username']})", __LINE__, __FILE__);
-							if ($vesta->unsuspend_account($serviceInfo[$settings['PREFIX'].'_username'])) {
-								myadmin_log(self::$module, 'info', 'Success, Response: '.var_export($vesta->response, TRUE), __LINE__, __FILE__);
-							} else {
-								myadmin_log(self::$module, 'info', 'Failure, Response: '.var_export($vesta->response, TRUE), __LINE__, __FILE__);
-								$success = FALSE;
-							}
-							break;
-						// cPanel/WHM
-						case SERVICE_TYPES_WEB_CPANEL:
-						default:
-							function_requirements('whm_api');
-							$user = 'root';
-							$ip = $serverdata[$settings['PREFIX'].'_ip'];
-							$whm = new \xmlapi($ip);
-							//$whm->set_debug('true');
-							$whm->set_port('2087');
-							$whm->set_protocol('https');
-							$whm->set_output('json');
-							$whm->set_auth_type('hash');
-							$whm->set_user($user);
-							$whm->set_hash($hash);
-							//$whm = whm_api('faith.interserver.net');
-							$field1 = explode(',', $serviceTypes[$serviceInfo[$settings['PREFIX'].'_type']]['services_field1']);
-							if (in_array('reseller', $field1))
-								$response = json_decode($whm->unsuspendreseller($serviceInfo[$settings['PREFIX'].'_username']), TRUE);
-							else
-								$response = json_decode($whm->unsuspendacct($serviceInfo[$settings['PREFIX'].'_username']), TRUE);
-							myadmin_log(self::$module, 'info', json_encode($response), __LINE__, __FILE__);
-							break;
-					}
-
-
-
-					if ($success == TRUE) {
+					$event = new GenericEvent($serviceClass, [
+						'field1' => $serviceTypes[$serviceInfo[$settings['PREFIX'].'_type']]['services_field1'],
+						'field2' => $serviceTypes[$serviceInfo[$settings['PREFIX'].'_type']]['services_field2'],
+						'category' => $serviceTypes[$serviceInfo[$settings['PREFIX'].'_type']]['services_category'],
+						'email' => $GLOBALS['tf']->accounts->cross_reference($serviceInfo[$settings['PREFIX'].'_custid']),
+						'success' => true,
+					]);
+					$GLOBALS['tf']->dispatcher->dispatch(self::$module.'.reactivate', $event);
+					if (!$event->isPropagationStopped())
+						myadmin_log('billing', 'warning', 'Dont know how to handle this reactivation type '.$module.' '.$id, __LINE__, __FILE__);
+					if ($event['success'] == TRUE) {
 						$GLOBALS['tf']->history->add($settings['PREFIX'], 'change_status', 'active', $serviceInfo[$settings['PREFIX'].'_id'], $serviceInfo[$settings['PREFIX'].'_custid']);
 						$db->query("update {$settings['TABLE']} set {$settings['PREFIX']}_status='active' where {$settings['PREFIX']}_id='{$serviceInfo[$settings['PREFIX'].'_id']}'", __LINE__, __FILE__);
 					}
