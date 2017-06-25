@@ -76,7 +76,7 @@ class Plugin {
 						'field2' => $serviceTypes[$serviceInfo[$settings['PREFIX'].'_type']]['services_field2'],
 						'category' => $serviceTypes[$serviceInfo[$settings['PREFIX'].'_type']]['services_category'],
 						'email' => $GLOBALS['tf']->accounts->cross_reference($serviceInfo[$settings['PREFIX'].'_custid']),
-						'success' => true,
+						'success' => TRUE,
 					]);
 					$GLOBALS['tf']->dispatcher->dispatch(self::$module.'.reactivate', $event);
 					if (!$event->isPropagationStopped())
