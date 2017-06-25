@@ -80,8 +80,8 @@ class Plugin {
 					$hash = $serverdata[$settings['PREFIX'].'_key'];
 					$ip = $serverdata[$settings['PREFIX'].'_ip'];
 					$success = TRUE;
-					$extra = run_event('parse_service_extra', $serviceInfo[$settings['PREFIX'] . '_extra'], self::$module);
-					switch ($serviceTypes[$serviceInfo[$settings['PREFIX'] . '_type']]['services_category']) {
+					$extra = run_event('parse_service_extra', $serviceInfo[$settings['PREFIX'].'_extra'], self::$module);
+					switch ($serviceTypes[$serviceInfo[$settings['PREFIX'].'_type']]['services_category']) {
 						// Parallels Plesk Automation
 						case SERVICE_TYPES_WEB_PPA:
 							if (sizeof($extra) == 0)
@@ -93,7 +93,7 @@ class Plugin {
 								$success = FALSE;
 							} else {
 								list($account_id, $user_id, $subscription_id, $webspace_id) = $extra;
-								require_once(INCLUDE_ROOT . '/webhosting/class.pleskautomation.php');
+								require_once(INCLUDE_ROOT.'/webhosting/class.pleskautomation.php');
 								$ppaConnector = get_webhosting_ppa_instance($serverdata);
 								$request = array(
 									'subscription_id' => $subscription_id,
@@ -127,10 +127,10 @@ class Plugin {
 						case SERVICE_TYPES_WEB_VESTA:
 							$data = $GLOBALS['tf']->accounts->read($serviceInfo[$settings['PREFIX'].'_custid']);
 							list($user, $pass) = explode(':', $hash);
-							require_once(INCLUDE_ROOT . '/webhosting/VestaCP.php');
+							require_once(INCLUDE_ROOT.'/webhosting/VestaCP.php');
 							$vesta = new \VestaCP($ip, $user, $pass);
-							myadmin_log(self::$module, 'info', "Calling vesta->unsuspend_account({$serviceInfo[$settings['PREFIX'] . '_username']})", __LINE__, __FILE__);
-							if ($vesta->unsuspend_account($serviceInfo[$settings['PREFIX'] . '_username'])) {
+							myadmin_log(self::$module, 'info', "Calling vesta->unsuspend_account({$serviceInfo[$settings['PREFIX'].'_username']})", __LINE__, __FILE__);
+							if ($vesta->unsuspend_account($serviceInfo[$settings['PREFIX'].'_username'])) {
 								myadmin_log(self::$module, 'info', 'Success, Response: '.var_export($vesta->response, TRUE), __LINE__, __FILE__);
 							} else {
 								myadmin_log(self::$module, 'info', 'Failure, Response: '.var_export($vesta->response, TRUE), __LINE__, __FILE__);
@@ -152,11 +152,11 @@ class Plugin {
 							$whm->set_user($user);
 							$whm->set_hash($hash);
 							//$whm = whm_api('faith.interserver.net');
-							$field1 = explode(',', $serviceTypes[$serviceInfo[$settings['PREFIX'] . '_type']]['services_field1']);
+							$field1 = explode(',', $serviceTypes[$serviceInfo[$settings['PREFIX'].'_type']]['services_field1']);
 							if (in_array('reseller', $field1))
-								$response = json_decode($whm->unsuspendreseller($serviceInfo[$settings['PREFIX'] . '_username']), TRUE);
+								$response = json_decode($whm->unsuspendreseller($serviceInfo[$settings['PREFIX'].'_username']), TRUE);
 							else
-								$response = json_decode($whm->unsuspendacct($serviceInfo[$settings['PREFIX'] . '_username']), TRUE);
+								$response = json_decode($whm->unsuspendacct($serviceInfo[$settings['PREFIX'].'_username']), TRUE);
 							myadmin_log(self::$module, 'info', json_encode($response), __LINE__, __FILE__);
 							break;
 					}
