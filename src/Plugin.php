@@ -71,6 +71,9 @@ class Plugin {
 					$GLOBALS['tf']->history->add($settings['PREFIX'], 'change_status', 'active', $serviceInfo[$settings['PREFIX'].'_id'], $serviceInfo[$settings['PREFIX'].'_custid']);
 					$db->query("update {$settings['TABLE']} set {$settings['PREFIX']}_status='active' where {$settings['PREFIX']}_id='{$serviceInfo[$settings['PREFIX'].'_id']}'", __LINE__, __FILE__);
 				} else {
+
+
+
 					$db->query("select * from {$settings['PREFIX']}_masters where {$settings['PREFIX']}_id='{$serviceInfo[$settings['PREFIX'].'_server']}'", __LINE__, __FILE__);
 					$db->next_record(MYSQL_ASSOC);
 					$serverdata = $db->Record;
@@ -157,6 +160,9 @@ class Plugin {
 							myadmin_log(self::$module, 'info', json_encode($response), __LINE__, __FILE__);
 							break;
 					}
+
+
+
 					if ($success == TRUE) {
 						$GLOBALS['tf']->history->add($settings['PREFIX'], 'change_status', 'active', $serviceInfo[$settings['PREFIX'].'_id'], $serviceInfo[$settings['PREFIX'].'_custid']);
 						$db->query("update {$settings['TABLE']} set {$settings['PREFIX']}_status='active' where {$settings['PREFIX']}_id='{$serviceInfo[$settings['PREFIX'].'_id']}'", __LINE__, __FILE__);
