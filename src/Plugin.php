@@ -58,7 +58,7 @@ class Plugin {
 					admin_email_website_pending_setup($serviceInfo[$settings['PREFIX'].'_id']);
 				} else {
 					// there was an error setting up the website, email us about it.
-					admin_mail('Error Setting Up Website ' . $serviceInfo[$settings['PREFIX'].'_id'], 'There was an error setting up the website.  Please look into it and fix.', FALSE, 'my@interserver.net', 'admin_email_setup_error.tpl');
+					admin_mail('Error Setting Up Website '.$serviceInfo[$settings['PREFIX'].'_id'], 'There was an error setting up the website.  Please look into it and fix.', FALSE, 'my@interserver.net', 'admin_email_setup_error.tpl');
 				}
 			})->set_reactivate(function($service) {
 				$serviceTypes = run_event('get_service_types', FALSE, self::$module);
@@ -103,9 +103,9 @@ class Plugin {
 								try {
 									\PPAConnector::checkResponse($result);
 								} catch (Exception $e) {
-									echo 'Caught exception: ' . $e->getMessage() . "\n";
+									echo 'Caught exception: '.$e->getMessage() . "\n";
 								}
-								myadmin_log(self::$module, 'info', 'enableSubscription Called got ' . json_encode($result), __LINE__, __FILE__);
+								myadmin_log(self::$module, 'info', 'enableSubscription Called got '.json_encode($result), __LINE__, __FILE__);
 							}
 							break;
 						// Parallels Plesk
@@ -119,9 +119,9 @@ class Plugin {
 							try {
 								$result = $plesk->update_client($request);
 							} catch (Exception $e) {
-								echo 'Caught exception: ' . $e->getMessage() . "\n";
+								echo 'Caught exception: '.$e->getMessage() . "\n";
 							}
-							myadmin_log(self::$module, 'info', 'update_client Called got ' . json_encode($result), __LINE__, __FILE__);
+							myadmin_log(self::$module, 'info', 'update_client Called got '.json_encode($result), __LINE__, __FILE__);
 							break;
 						// VestaCP
 						case SERVICE_TYPES_WEB_VESTA:
@@ -131,9 +131,9 @@ class Plugin {
 							$vesta = new \VestaCP($ip, $user, $pass);
 							myadmin_log(self::$module, 'info', "Calling vesta->unsuspend_account({$serviceInfo[$settings['PREFIX'] . '_username']})", __LINE__, __FILE__);
 							if ($vesta->unsuspend_account($serviceInfo[$settings['PREFIX'] . '_username'])) {
-								myadmin_log(self::$module, 'info', 'Success, Response: ' . var_export($vesta->response, TRUE), __LINE__, __FILE__);
+								myadmin_log(self::$module, 'info', 'Success, Response: '.var_export($vesta->response, TRUE), __LINE__, __FILE__);
 							} else {
-								myadmin_log(self::$module, 'info', 'Failure, Response: ' . var_export($vesta->response, TRUE), __LINE__, __FILE__);
+								myadmin_log(self::$module, 'info', 'Failure, Response: '.var_export($vesta->response, TRUE), __LINE__, __FILE__);
 								$success = FALSE;
 							}
 							break;
