@@ -48,21 +48,7 @@ class Plugin {
 				$serviceTypes = run_event('get_service_types', FALSE, self::$module);
 				$serviceInfo = $service->getServiceInfo();
 				$settings = get_module_settings(self::$module);
-				$class = '\\MyAdmin\\Orm\\'.get_orm_class_from_table($settings['TABLE']);
-				/** @var \MyAdmin\Orm\Product $class **/
-				$serviceClass = new $class();
-				$serviceClass->load_real($serviceInfo[$settings['PREFIX'].'_id']);
-				$event = new GenericEvent($serviceClass, [
-					'field1' => $serviceTypes[$serviceInfo[$settings['PREFIX'].'_type']]['services_field1'],
-					'field2' => $serviceTypes[$serviceInfo[$settings['PREFIX'].'_type']]['services_field2'],
-					'category' => $serviceTypes[$serviceInfo[$settings['PREFIX'].'_type']]['services_category'],
-					'email' => $GLOBALS['tf']->accounts->cross_reference($serviceInfo[$settings['PREFIX'].'_custid']),
-					'success' => true
-				]);
-				$GLOBALS['tf']->dispatcher->dispatch(self::$module.'.activate', $event);
-				if (!$event->isPropagationStopped())
-					myadmin_log(self::$module, 'warning', 'Dont know how to handle this type '.self::$module.' '.$serviceInfo[$settings['PREFIX'].'_id'], __LINE__, __FILE__);
-				if ($event['success'] !== FALSE) {
+				if ($service->getSuccess() !== FALSE) {
 					$db = get_module_db(self::$module);
 					$db->query("update {$settings['TABLE']} set {$settings['PREFIX']}_status='active' where {$settings['PREFIX']}_id='{$serviceInfo[$settings['PREFIX'].'_id']}'", __LINE__, __FILE__);
 					$GLOBALS['tf']->history->add($settings['PREFIX'], 'change_status', 'active', $serviceInfo[$settings['PREFIX'].'_id'], $serviceInfo[$settings['PREFIX'].'_custid']);
@@ -76,40 +62,8 @@ class Plugin {
 				$serviceInfo = $service->getServiceInfo();
 				$settings = get_module_settings(self::$module);
 				$db = get_module_db(self::$module);
-				$class = '\\MyAdmin\\Orm\\'.get_orm_class_from_table($settings['TABLE']);
-				/** @var \MyAdmin\Orm\Product $class **/
-				$serviceClass = new $class();
-				$serviceClass->load_real($serviceInfo[$settings['PREFIX'].'_id']);
-				if ($serviceInfo[$settings['PREFIX'].'_server_status'] === 'deleted' || $serviceInfo[$settings['PREFIX'].'_ip'] == '' || (isset($serviceInfo[$settings['PREFIX'].'_username']) && $serviceInfo[$settings['PREFIX'].'_username'] == '')) {
-					$event = new GenericEvent($serviceClass, [
-						'field1' => $serviceTypes[$serviceInfo[$settings['PREFIX'].'_type']]['services_field1'],
-						'field2' => $serviceTypes[$serviceInfo[$settings['PREFIX'].'_type']]['services_field2'],
-						'category' => $serviceTypes[$serviceInfo[$settings['PREFIX'].'_type']]['services_category'],
-						'email' => $GLOBALS['tf']->accounts->cross_reference($serviceInfo[$settings['PREFIX'].'_custid']),
-						'success' => true
-					]);
-					$GLOBALS['tf']->dispatcher->dispatch(self::$module.'.activate', $event);
-					if (!$event->isPropagationStopped())
-						myadmin_log(self::$module, 'warning', 'Dont know how to handle this type '.self::$module.' '.$serviceInfo[$settings['PREFIX'].'_id'], __LINE__, __FILE__);
-
-					$GLOBALS['tf']->history->add($settings['PREFIX'], 'change_status', 'active', $serviceInfo[$settings['PREFIX'].'_id'], $serviceInfo[$settings['PREFIX'].'_custid']);
-					$db->query("update {$settings['TABLE']} set {$settings['PREFIX']}_status='active' where {$settings['PREFIX']}_id='{$serviceInfo[$settings['PREFIX'].'_id']}'", __LINE__, __FILE__);
-				} else {
-					$event = new GenericEvent($serviceClass, [
-						'field1' => $serviceTypes[$serviceInfo[$settings['PREFIX'].'_type']]['services_field1'],
-						'field2' => $serviceTypes[$serviceInfo[$settings['PREFIX'].'_type']]['services_field2'],
-						'category' => $serviceTypes[$serviceInfo[$settings['PREFIX'].'_type']]['services_category'],
-						'email' => $GLOBALS['tf']->accounts->cross_reference($serviceInfo[$settings['PREFIX'].'_custid']),
-						'success' => TRUE,
-					]);
-					$GLOBALS['tf']->dispatcher->dispatch(self::$module.'.reactivate', $event);
-					if (!$event->isPropagationStopped())
-						myadmin_log(self::$module, 'warning', 'Dont know how to handle this reactivation type '.self::$module.' '.$serviceInfo[$settings['PREFIX'].'_id'], __LINE__, __FILE__);
-					if ($event['success'] == TRUE) {
-						$GLOBALS['tf']->history->add($settings['PREFIX'], 'change_status', 'active', $serviceInfo[$settings['PREFIX'].'_id'], $serviceInfo[$settings['PREFIX'].'_custid']);
-						$db->query("update {$settings['TABLE']} set {$settings['PREFIX']}_status='active' where {$settings['PREFIX']}_id='{$serviceInfo[$settings['PREFIX'].'_id']}'", __LINE__, __FILE__);
-					}
-				}
+				$GLOBALS['tf']->history->add($settings['PREFIX'], 'change_status', 'active', $serviceInfo[$settings['PREFIX'].'_id'], $serviceInfo[$settings['PREFIX'].'_custid']);
+				$db->query("update {$settings['TABLE']} set {$settings['PREFIX']}_status='active' where {$settings['PREFIX']}_id='{$serviceInfo[$settings['PREFIX'].'_id']}'", __LINE__, __FILE__);
 				$smarty = new \TFSmarty;
 				$smarty->assign('website_name', $serviceTypes[$serviceInfo[$settings['PREFIX'].'_type']]['services_name']);
 				$email = $smarty->fetch('email/admin_email_website_reactivated.tpl');
