@@ -50,14 +50,22 @@ class Plugin {
 				$settings = get_module_settings(self::$module);
 				$db = get_module_db(self::$module);
 				function_requirements('website_create');
-				$success = website_create($serviceInfo[$settings['PREFIX'].'_id'], $serviceInfo[$settings['PREFIX'].'_type'], $serviceInfo[$settings['PREFIX'].'_hostname'], website_get_password($serviceInfo[$settings['PREFIX'].'_id']));
-				if ($success !== FALSE) {
+				$event = new GenericEvent($service, [
+					'field1' => $serviceTypes[$serviceInfo[$settings['PREFIX'].'_type']]['services_field1'],
+					'field2' => $serviceTypes[$serviceInfo[$settings['PREFIX'].'_type']]['services_field2'],
+					'category' => $serviceTypes[$serviceInfo[$settings['PREFIX'].'_type']]['services_category'],
+					'email' => $GLOBALS['tf']->accounts->cross_reference($serviceInfo[$settings['PREFIX'].'_custid']),
+					'success' => true
+				]);
+				$GLOBALS['tf']->dispatcher->dispatch($module.'.activate', $event);
+				if (!$event->isPropagationStopped())
+					myadmin_log('billing', 'warning', 'Dont know how to handle this type '.$module.' '.$id, __LINE__, __FILE__);
+				if ($event['success'] !== FALSE) {
 					$db->query("update {$settings['TABLE']} set {$settings['PREFIX']}_status='active' where {$settings['PREFIX']}_id='{$serviceInfo[$settings['PREFIX'].'_id']}'", __LINE__, __FILE__);
 					$GLOBALS['tf']->history->add($settings['PREFIX'], 'change_status', 'active', $serviceInfo[$settings['PREFIX'].'_id'], $serviceInfo[$settings['PREFIX'].'_custid']);
 					function_requirements('admin_email_website_pending_setup');
 					admin_email_website_pending_setup($serviceInfo[$settings['PREFIX'].'_id']);
 				} else {
-					// there was an error setting up the website, email us about it.
 					admin_mail('Error Setting Up Website '.$serviceInfo[$settings['PREFIX'].'_id'], 'There was an error setting up the website.  Please look into it and fix.', FALSE, 'my@interserver.net', 'admin_email_setup_error.tpl');
 				}
 			})->set_reactivate(function($service) {
@@ -71,7 +79,7 @@ class Plugin {
 					$GLOBALS['tf']->history->add($settings['PREFIX'], 'change_status', 'active', $serviceInfo[$settings['PREFIX'].'_id'], $serviceInfo[$settings['PREFIX'].'_custid']);
 					$db->query("update {$settings['TABLE']} set {$settings['PREFIX']}_status='active' where {$settings['PREFIX']}_id='{$serviceInfo[$settings['PREFIX'].'_id']}'", __LINE__, __FILE__);
 				} else {
-					$event = new GenericEvent($serviceClass, [
+					$event = new GenericEvent($service, [
 						'field1' => $serviceTypes[$serviceInfo[$settings['PREFIX'].'_type']]['services_field1'],
 						'field2' => $serviceTypes[$serviceInfo[$settings['PREFIX'].'_type']]['services_field2'],
 						'category' => $serviceTypes[$serviceInfo[$settings['PREFIX'].'_type']]['services_category'],
