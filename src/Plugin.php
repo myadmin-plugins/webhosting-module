@@ -59,9 +59,9 @@ class Plugin {
 					'email' => $GLOBALS['tf']->accounts->cross_reference($serviceInfo[$settings['PREFIX'].'_custid']),
 					'success' => true
 				]);
-				$GLOBALS['tf']->dispatcher->dispatch($module.'.activate', $event);
+				$GLOBALS['tf']->dispatcher->dispatch(self::$module.'.activate', $event);
 				if (!$event->isPropagationStopped())
-					myadmin_log('billing', 'warning', 'Dont know how to handle this type '.$module.' '.$id, __LINE__, __FILE__);
+					myadmin_log('billing', 'warning', 'Dont know how to handle this type '.self::$module.' '.$serviceInfo[$settings['PREFIX'].'_id'], __LINE__, __FILE__);
 				if ($event['success'] !== FALSE) {
 					$db = get_module_db(self::$module);
 					$db->query("update {$settings['TABLE']} set {$settings['PREFIX']}_status='active' where {$settings['PREFIX']}_id='{$serviceInfo[$settings['PREFIX'].'_id']}'", __LINE__, __FILE__);
@@ -88,9 +88,9 @@ class Plugin {
 						'email' => $GLOBALS['tf']->accounts->cross_reference($serviceInfo[$settings['PREFIX'].'_custid']),
 						'success' => true
 					]);
-					$GLOBALS['tf']->dispatcher->dispatch($module.'.activate', $event);
+					$GLOBALS['tf']->dispatcher->dispatch(self::$module.'.activate', $event);
 					if (!$event->isPropagationStopped())
-						myadmin_log('billing', 'warning', 'Dont know how to handle this type '.$module.' '.$id, __LINE__, __FILE__);
+						myadmin_log('billing', 'warning', 'Dont know how to handle this type '.self::$module.' '.$serviceInfo[$settings['PREFIX'].'_id'], __LINE__, __FILE__);
 
 					$GLOBALS['tf']->history->add($settings['PREFIX'], 'change_status', 'active', $serviceInfo[$settings['PREFIX'].'_id'], $serviceInfo[$settings['PREFIX'].'_custid']);
 					$db->query("update {$settings['TABLE']} set {$settings['PREFIX']}_status='active' where {$settings['PREFIX']}_id='{$serviceInfo[$settings['PREFIX'].'_id']}'", __LINE__, __FILE__);
@@ -104,7 +104,7 @@ class Plugin {
 					]);
 					$GLOBALS['tf']->dispatcher->dispatch(self::$module.'.reactivate', $event);
 					if (!$event->isPropagationStopped())
-						myadmin_log('billing', 'warning', 'Dont know how to handle this reactivation type '.$module.' '.$id, __LINE__, __FILE__);
+						myadmin_log('billing', 'warning', 'Dont know how to handle this reactivation type '.self::$module.' '.$serviceInfo[$settings['PREFIX'].'_id'], __LINE__, __FILE__);
 					if ($event['success'] == TRUE) {
 						$GLOBALS['tf']->history->add($settings['PREFIX'], 'change_status', 'active', $serviceInfo[$settings['PREFIX'].'_id'], $serviceInfo[$settings['PREFIX'].'_custid']);
 						$db->query("update {$settings['TABLE']} set {$settings['PREFIX']}_status='active' where {$settings['PREFIX']}_id='{$serviceInfo[$settings['PREFIX'].'_id']}'", __LINE__, __FILE__);
