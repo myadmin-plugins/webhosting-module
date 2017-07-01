@@ -48,8 +48,6 @@ class Plugin {
 				$serviceTypes = run_event('get_service_types', FALSE, self::$module);
 				$serviceInfo = $service->getServiceInfo();
 				$settings = get_module_settings(self::$module);
-				$db = get_module_db(self::$module);
-				function_requirements('website_create');
 				$event = new GenericEvent($service, [
 					'field1' => $serviceTypes[$serviceInfo[$settings['PREFIX'].'_type']]['services_field1'],
 					'field2' => $serviceTypes[$serviceInfo[$settings['PREFIX'].'_type']]['services_field2'],
@@ -61,6 +59,7 @@ class Plugin {
 				if (!$event->isPropagationStopped())
 					myadmin_log('billing', 'warning', 'Dont know how to handle this type '.$module.' '.$id, __LINE__, __FILE__);
 				if ($event['success'] !== FALSE) {
+					$db = get_module_db(self::$module);
 					$db->query("update {$settings['TABLE']} set {$settings['PREFIX']}_status='active' where {$settings['PREFIX']}_id='{$serviceInfo[$settings['PREFIX'].'_id']}'", __LINE__, __FILE__);
 					$GLOBALS['tf']->history->add($settings['PREFIX'], 'change_status', 'active', $serviceInfo[$settings['PREFIX'].'_id'], $serviceInfo[$settings['PREFIX'].'_custid']);
 					function_requirements('admin_email_website_pending_setup');
@@ -74,8 +73,17 @@ class Plugin {
 				$settings = get_module_settings(self::$module);
 				$db = get_module_db(self::$module);
 				if ($serviceInfo[$settings['PREFIX'].'_server_status'] === 'deleted' || $serviceInfo[$settings['PREFIX'].'_ip'] == '' || (isset($serviceInfo[$settings['PREFIX'].'_username']) && $serviceInfo[$settings['PREFIX'].'_username'] == '')) {
-					function_requirements('website_create');
-					$success = website_create($serviceInfo[$settings['PREFIX'].'_id'], $serviceInfo[$settings['PREFIX'].'_type'], $serviceInfo[$settings['PREFIX'].'_hostname'], website_get_password($serviceInfo[$settings['PREFIX'].'_id']));
+					$event = new GenericEvent($service, [
+						'field1' => $serviceTypes[$serviceInfo[$settings['PREFIX'].'_type']]['services_field1'],
+						'field2' => $serviceTypes[$serviceInfo[$settings['PREFIX'].'_type']]['services_field2'],
+						'category' => $serviceTypes[$serviceInfo[$settings['PREFIX'].'_type']]['services_category'],
+						'email' => $GLOBALS['tf']->accounts->cross_reference($serviceInfo[$settings['PREFIX'].'_custid']),
+						'success' => true
+					]);
+					$GLOBALS['tf']->dispatcher->dispatch($module.'.activate', $event);
+					if (!$event->isPropagationStopped())
+						myadmin_log('billing', 'warning', 'Dont know how to handle this type '.$module.' '.$id, __LINE__, __FILE__);
+
 					$GLOBALS['tf']->history->add($settings['PREFIX'], 'change_status', 'active', $serviceInfo[$settings['PREFIX'].'_id'], $serviceInfo[$settings['PREFIX'].'_custid']);
 					$db->query("update {$settings['TABLE']} set {$settings['PREFIX']}_status='active' where {$settings['PREFIX']}_id='{$serviceInfo[$settings['PREFIX'].'_id']}'", __LINE__, __FILE__);
 				} else {
