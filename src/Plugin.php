@@ -6,7 +6,7 @@ use Symfony\Component\EventDispatcher\GenericEvent;
 
 class Plugin {
 
-	public static $name = 'Webhosting Module';
+	public static $name = 'Webhosting';
 	public static $description = 'Allows selling of Webhosting Module';
 	public static $help = '';
 	public static $module = 'webhosting';
