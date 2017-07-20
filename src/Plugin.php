@@ -4,6 +4,11 @@ namespace Detain\MyAdminWebhosting;
 
 use Symfony\Component\EventDispatcher\GenericEvent;
 
+/**
+ * Class Plugin
+ *
+ * @package Detain\MyAdminWebhosting
+ */
 class Plugin {
 
 	public static $name = 'Webhosting';
@@ -30,10 +35,15 @@ class Plugin {
 		'TITLE_FIELD2' => 'website_username',
 		'MENUNAME' => 'Webhosting'];
 
-
+	/**
+	 * Plugin constructor.
+	 */
 	public function __construct() {
 	}
 
+	/**
+	 * @return array
+	 */
 	public static function getHooks() {
 		return [
 			self::$module.'.load_processing' => [__CLASS__, 'loadProcessing'],
@@ -41,6 +51,9 @@ class Plugin {
 		];
 	}
 
+	/**
+	 * @param \Symfony\Component\EventDispatcher\GenericEvent $event
+	 */
 	public static function loadProcessing(GenericEvent $event) {
 		$service = $event->getSubject();
 		$service->setModule(self::$module)
@@ -74,6 +87,9 @@ class Plugin {
 
 	}
 
+	/**
+	 * @param \Symfony\Component\EventDispatcher\GenericEvent $event
+	 */
 	public static function getSettings(GenericEvent $event) {
 		$settings = $event->getSubject();
 		$settings->add_select_master(self::$module, 'Default Servers', self::$module, 'new_website_server', 'Default Setup Server', NEW_WEBSITE_SERVER);
