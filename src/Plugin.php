@@ -83,6 +83,44 @@ class Plugin {
 				$subject = $serviceInfo[$settings['TITLE_FIELD']].' '.$serviceTypes[$serviceInfo[$settings['PREFIX'].'_type']]['services_name'].' '.$settings['TBLNAME'].' Re-Activated';
 				admin_mail($subject, $email, FALSE, FALSE, 'admin_email_website_reactivated.tpl');
 			})->set_disable(function($service) {
+			})->setTerminate(function($service) {
+				$serviceInfo = $service->getServiceInfo();
+				$settings = get_module_settings(self::$module);
+				$serviceTypes = run_event('get_service_types', FALSE, self::$module);
+				$settings = get_module_settings(self::$module);
+				$class = '\\MyAdmin\\Orm\\'.get_orm_class_from_table($settings['TABLE']);
+				/** @var \MyAdmin\Orm\Product $class **/
+				$serviceClass = new $class();
+				$serviceClass->load_real($id);
+				$subevent = new GenericEvent($serviceClass, [
+					'field1' => $serviceTypes[$serviceClass->getType()]['services_field1'],
+					'field2' => $serviceTypes[$serviceClass->getType()]['services_field2'],
+					'type' => $serviceTypes[$serviceClass->getType()]['services_type'],
+					'category' => $serviceTypes[$serviceClass->getType()]['services_category'],
+					'email' => $GLOBALS['tf']->accounts->cross_reference($serviceClass->getCustid())
+				]);
+				$success = true;
+				try {
+					$GLOBALS['tf']->dispatcher->dispatch(self::$module.'.terminate', $subevent);
+				} catch (\Exception $e) {
+					myadmin_log('webhosting', 'info', 'Got Exception '.$e->getMessage(), __LINE__, __FILE__);
+					$serverData = get_service_master($serviceClass->getServer(), self::$module);
+					$subject = 'Cant Connect to Webhosting Server to Suspend';
+					$headers = 'MIME-Version: 1.0'.EMAIL_NEWLINE;
+					$headers .= 'Content-type: text/html; charset=UTF-8'.EMAIL_NEWLINE;
+					$headers .= 'From: '.$settings['TITLE'].' <'.$settings['EMAIL_FROM'].'>'.EMAIL_NEWLINE;
+					$email = $subject.'<br>'.'Username '.$serviceClass->getUsername().'<br>'.'Server '.$serverData[$settings['PREFIX'].'_name'].'<br>'.$e->getMessage();
+					admin_mail($subject, $email, $headers, FALSE, 'admin_email_website_connect_error.tpl');
+					$success = false;
+				}
+				if ($success == true && !$subevent->isPropagationStopped()) {
+					myadmin_log(self::$module, 'error', 'Dont know how to deactivate '.$settings['TBLNAME'].' '.$id.' Type '.$serviceTypes[$serviceClass->getType()]['services_type'].' Category '.$serviceTypes[$serviceClass->getType()]['services_category'], __LINE__, __FILE__);
+					$success = false;
+				}
+				if ($success == true) {
+					$serviceClass->setServerStatus('deleted')->save();
+					$db->query("update {$settings['TABLE']} set {$settings['PREFIX']}_server_status='deleted' where {$settings['PREFIX']}_id={$id}", __LINE__, __FILE__);
+				}
 			})->register();
 
 	}
