@@ -87,7 +87,6 @@ class Plugin {
 				$serviceInfo = $service->getServiceInfo();
 				$settings = get_module_settings(self::$module);
 				$serviceTypes = run_event('get_service_types', FALSE, self::$module);
-				$settings = get_module_settings(self::$module);
 				$class = '\\MyAdmin\\Orm\\'.get_orm_class_from_table($settings['TABLE']);
 				/** @var \MyAdmin\Orm\Product $class **/
 				$serviceClass = new $class();
