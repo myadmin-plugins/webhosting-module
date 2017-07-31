@@ -57,7 +57,7 @@ class Plugin {
 	public static function loadProcessing(GenericEvent $event) {
 		$service = $event->getSubject();
 		$service->setModule(self::$module)
-			->set_enable(function($service) {
+			->setEnable(function($service) {
 				$serviceTypes = run_event('get_service_types', FALSE, self::$module);
 				$serviceInfo = $service->getServiceInfo();
 				$settings = get_module_settings(self::$module);
@@ -70,7 +70,7 @@ class Plugin {
 				} else {
 					admin_mail('Error Setting Up Website '.$serviceInfo[$settings['PREFIX'].'_id'], 'There was an error setting up the website.  Please look into it and fix.', FALSE, 'my@interserver.net', 'admin_email_setup_error.tpl');
 				}
-			})->set_reactivate(function($service) {
+			})->setReactivate(function($service) {
 				$serviceTypes = run_event('get_service_types', FALSE, self::$module);
 				$serviceInfo = $service->getServiceInfo();
 				$settings = get_module_settings(self::$module);
@@ -82,7 +82,7 @@ class Plugin {
 				$email = $smarty->fetch('email/admin_email_website_reactivated.tpl');
 				$subject = $serviceInfo[$settings['TITLE_FIELD']].' '.$serviceTypes[$serviceInfo[$settings['PREFIX'].'_type']]['services_name'].' '.$settings['TBLNAME'].' Re-Activated';
 				admin_mail($subject, $email, FALSE, FALSE, 'admin_email_website_reactivated.tpl');
-			})->set_disable(function($service) {
+			})->setDisable(function($service) {
 			})->setTerminate(function($service) {
 				$serviceInfo = $service->getServiceInfo();
 				$settings = get_module_settings(self::$module);
