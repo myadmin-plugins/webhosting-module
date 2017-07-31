@@ -90,7 +90,7 @@ class Plugin {
 				$class = '\\MyAdmin\\Orm\\'.get_orm_class_from_table($settings['TABLE']);
 				/** @var \MyAdmin\Orm\Product $class **/
 				$serviceClass = new $class();
-				$serviceClass->load_real($id);
+				$serviceClass->load_real($serviceInfo[$settings['PREFIX'].'_id']);
 				$subevent = new GenericEvent($serviceClass, [
 					'field1' => $serviceTypes[$serviceClass->getType()]['services_field1'],
 					'field2' => $serviceTypes[$serviceClass->getType()]['services_field2'],
@@ -113,12 +113,12 @@ class Plugin {
 					$success = false;
 				}
 				if ($success == true && !$subevent->isPropagationStopped()) {
-					myadmin_log(self::$module, 'error', 'Dont know how to deactivate '.$settings['TBLNAME'].' '.$id.' Type '.$serviceTypes[$serviceClass->getType()]['services_type'].' Category '.$serviceTypes[$serviceClass->getType()]['services_category'], __LINE__, __FILE__);
+					myadmin_log(self::$module, 'error', 'Dont know how to deactivate '.$settings['TBLNAME'].' '.$serviceInfo[$settings['PREFIX'].'_id'].' Type '.$serviceTypes[$serviceClass->getType()]['services_type'].' Category '.$serviceTypes[$serviceClass->getType()]['services_category'], __LINE__, __FILE__);
 					$success = false;
 				}
 				if ($success == true) {
 					$serviceClass->setServerStatus('deleted')->save();
-					$db->query("update {$settings['TABLE']} set {$settings['PREFIX']}_server_status='deleted' where {$settings['PREFIX']}_id={$id}", __LINE__, __FILE__);
+					$db->query("update {$settings['TABLE']} set {$settings['PREFIX']}_server_status='deleted' where {$settings['PREFIX']}_id={$serviceInfo[$settings['PREFIX'].'_id']}", __LINE__, __FILE__);
 				}
 			})->register();
 
