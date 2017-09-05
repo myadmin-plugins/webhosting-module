@@ -61,15 +61,11 @@ class Plugin {
 				$serviceTypes = run_event('get_service_types', FALSE, self::$module);
 				$serviceInfo = $service->getServiceInfo();
 				$settings = get_module_settings(self::$module);
-				if ($service->getSuccess() !== FALSE) {
-					$db = get_module_db(self::$module);
-					$db->query("update {$settings['TABLE']} set {$settings['PREFIX']}_status='active' where {$settings['PREFIX']}_id='{$serviceInfo[$settings['PREFIX'].'_id']}'", __LINE__, __FILE__);
-					$GLOBALS['tf']->history->add($settings['PREFIX'], 'change_status', 'active', $serviceInfo[$settings['PREFIX'].'_id'], $serviceInfo[$settings['PREFIX'].'_custid']);
-					function_requirements('admin_email_website_pending_setup');
-					admin_email_website_pending_setup($serviceInfo[$settings['PREFIX'].'_id']);
-				} else {
-					admin_mail('Error Setting Up Website '.$serviceInfo[$settings['PREFIX'].'_id'], 'There was an error setting up the website.  Please look into it and fix.', FALSE, 'my@interserver.net', 'admin_email_setup_error.tpl');
-				}
+				$db = get_module_db(self::$module);
+				$db->query("update {$settings['TABLE']} set {$settings['PREFIX']}_status='active' where {$settings['PREFIX']}_id='{$serviceInfo[$settings['PREFIX'].'_id']}'", __LINE__, __FILE__);
+				$GLOBALS['tf']->history->add($settings['PREFIX'], 'change_status', 'active', $serviceInfo[$settings['PREFIX'].'_id'], $serviceInfo[$settings['PREFIX'].'_custid']);
+				function_requirements('admin_email_website_pending_setup');
+				admin_email_website_pending_setup($serviceInfo[$settings['PREFIX'].'_id']);
 			})->setReactivate(function($service) {
 				$serviceTypes = run_event('get_service_types', FALSE, self::$module);
 				$serviceInfo = $service->getServiceInfo();
