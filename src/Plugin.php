@@ -75,9 +75,9 @@ class Plugin {
 				$db->query("update {$settings['TABLE']} set {$settings['PREFIX']}_status='active' where {$settings['PREFIX']}_id='{$serviceInfo[$settings['PREFIX'].'_id']}'", __LINE__, __FILE__);
 				$smarty = new \TFSmarty;
 				$smarty->assign('website_name', $serviceTypes[$serviceInfo[$settings['PREFIX'].'_type']]['services_name']);
-				$email = $smarty->fetch('email/admin_email_website_reactivated.tpl');
+				$email = $smarty->fetch('email/admin/website_reactivated.tpl');
 				$subject = $serviceInfo[$settings['TITLE_FIELD']].' '.$serviceTypes[$serviceInfo[$settings['PREFIX'].'_type']]['services_name'].' '.$settings['TBLNAME'].' Re-Activated';
-				admin_mail($subject, $email, FALSE, FALSE, 'admin_email_website_reactivated.tpl');
+				admin_mail($subject, $email, FALSE, FALSE, 'admin/website_reactivated.tpl');
 			})->setDisable(function($service) {
 			})->setTerminate(function($service) {
 				$serviceInfo = $service->getServiceInfo();
