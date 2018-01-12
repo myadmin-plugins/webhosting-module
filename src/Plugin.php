@@ -105,7 +105,7 @@ class Plugin {
 					$headers .= 'Content-type: text/html; charset=UTF-8'.EMAIL_NEWLINE;
 					$headers .= 'From: '.$settings['TITLE'].' <'.$settings['EMAIL_FROM'].'>'.EMAIL_NEWLINE;
 					$email = $subject.'<br>'.'Username '.$serviceClass->getUsername().'<br>'.'Server '.$serverData[$settings['PREFIX'].'_name'].'<br>'.$e->getMessage();
-					admin_mail($subject, $email, $headers, FALSE, 'admin_email_website_connect_error.tpl');
+					admin_mail($subject, $email, $headers, FALSE, 'admin/website_connect_error.tpl');
 					$success = false;
 				}
 				if ($success == true && !$subevent->isPropagationStopped()) {
