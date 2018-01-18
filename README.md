@@ -24,5 +24,5 @@ composer require detain/myadmin-webhosting-module
 
 ## License
 
-The Webhosting Module for MyAdmin class is licensed under the LGPL-v2 license.
+The Webhosting Module for MyAdmin class is licensed under the LGPL-v2.1 license.
 
