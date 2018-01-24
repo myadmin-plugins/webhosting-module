@@ -138,7 +138,7 @@ class Plugin {
 		$settings->add_text_setting(self::$module, 'Webhosting Demo', 'website_demo_expire_days', 'Days before Demo Expires:', 'How many days a webhosting demo will be active before expiring.', (defined('WEBSITE_DEMO_EXPIRE_DAYS') ? WEBSITE_DEMO_EXPIRE_DAYS : 14));
 		$settings->add_text_setting(self::$module, 'Webhosting Demo', 'website_demo_warning_days', 'Days before Demo Sends Expiring Soon Mail:', 'How many days a webhosting demo will be active before sending out an expiring soon warning email.', (defined('WEBSITE_DEMO_WARNING_DAYS') ? WEBSITE_DEMO_WARNING_DAYS : 10));
 		$settings->add_text_setting(self::$module, 'Webhosting Demo', 'website_demo_extend_days', 'Days the demo is extended when extending the demo:', 'How many days a webhosting demo will be active before sending out an expiring soon warning email.', (defined('WEBSITE_DEMO_EXTEND_DAYS') ? WEBSITE_DEMO_EXTEND_DAYS : 10));
-		$settings->add_master_checkbox_setting(self::$module, 'Server Settings', self::$module, 'available', 'vps_available', 'Auto-Setup', '<p>Choose which servers are used for auto-server Setups.</p>');
+		$settings->add_master_checkbox_setting(self::$module, 'Server Settings', self::$module, 'available', 'website_available', 'Auto-Setup', '<p>Choose which servers are used for auto-server Setups.</p>');
 		//$settings->add_select_master_autosetup(self::$module, 'Auto-Setup Servers', self::$module, 'webhosting_setup_servers', 'Auto-Setup Servers:', '<p>Choose which servers are used for auto-server Setups.</p>');
 	}
 }
