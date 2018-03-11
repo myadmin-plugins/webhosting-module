@@ -97,7 +97,7 @@ class Plugin {
 					'category' => $serviceTypes[$serviceClass->getType()]['services_category'],
 					'email' => $GLOBALS['tf']->accounts->cross_reference($serviceClass->getCustid())
 				]);
-				$success = true;
+				$success = TRUE;
 				try {
 					$GLOBALS['tf']->dispatcher->dispatch(self::$module.'.terminate', $subevent);
 				} catch (\Exception $e) {
@@ -109,13 +109,13 @@ class Plugin {
 					$headers .= 'From: '.$settings['TITLE'].' <'.$settings['EMAIL_FROM'].'>'.EMAIL_NEWLINE;
 					$email = $subject.'<br>'.'Username '.$serviceClass->getUsername().'<br>'.'Server '.$serverData[$settings['PREFIX'].'_name'].'<br>'.$e->getMessage();
 					admin_mail($subject, $email, $headers, FALSE, 'admin/website_connect_error.tpl');
-					$success = false;
+					$success = FALSE;
 				}
-				if ($success == true && !$subevent->isPropagationStopped()) {
+				if ($success == TRUE && !$subevent->isPropagationStopped()) {
 					myadmin_log(self::$module, 'error', 'Dont know how to deactivate '.$settings['TBLNAME'].' '.$serviceInfo[$settings['PREFIX'].'_id'].' Type '.$serviceTypes[$serviceClass->getType()]['services_type'].' Category '.$serviceTypes[$serviceClass->getType()]['services_category'], __LINE__, __FILE__);
-					$success = false;
+					$success = FALSE;
 				}
-				if ($success == true) {
+				if ($success == TRUE) {
 					$db = get_module_db(self::$module);
 					$serviceClass->setServerStatus('deleted')->save();
 					$db->query("update {$settings['TABLE']} set {$settings['PREFIX']}_server_status='deleted' where {$settings['PREFIX']}_id={$serviceInfo[$settings['PREFIX'].'_id']}", __LINE__, __FILE__);
