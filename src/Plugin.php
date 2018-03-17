@@ -107,7 +107,7 @@ class Plugin {
 					$headers = 'MIME-Version: 1.0'.EMAIL_NEWLINE;
 					$headers .= 'Content-type: text/html; charset=UTF-8'.EMAIL_NEWLINE;
 					$headers .= 'From: '.$settings['TITLE'].' <'.$settings['EMAIL_FROM'].'>'.EMAIL_NEWLINE;
-					$email = $subject.'<br>'.'Username '.$serviceClass->getUsername().'<br>'.'Server '.$serverData[$settings['PREFIX'].'_name'].'<br>'.$e->getMessage();
+					$email = $subject.'<br>Username '.$serviceClass->getUsername().'<br>Server '.$serverData[$settings['PREFIX'].'_name'].'<br>'.$e->getMessage();
 					admin_mail($subject, $email, $headers, FALSE, 'admin/website_connect_error.tpl');
 					$success = FALSE;
 				}
