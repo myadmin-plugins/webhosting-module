@@ -104,9 +104,9 @@ class Plugin {
 					myadmin_log('webhosting', 'info', 'Got Exception '.$e->getMessage(), __LINE__, __FILE__);
 					$serverData = get_service_master($serviceClass->getServer(), self::$module);
 					$subject = 'Cant Connect to Webhosting Server to Suspend';
-					$headers = 'MIME-Version: 1.0'.EMAIL_NEWLINE;
-					$headers .= 'Content-type: text/html; charset=UTF-8'.EMAIL_NEWLINE;
-					$headers .= 'From: '.$settings['TITLE'].' <'.$settings['EMAIL_FROM'].'>'.EMAIL_NEWLINE;
+					$headers = 'MIME-Version: 1.0'.PHP_EOL;
+					$headers .= 'Content-type: text/html; charset=UTF-8'.PHP_EOL;
+					$headers .= 'From: '.$settings['TITLE'].' <'.$settings['EMAIL_FROM'].'>'.PHP_EOL;
 					$email = $subject.'<br>Username '.$serviceClass->getUsername().'<br>Server '.$serverData[$settings['PREFIX'].'_name'].'<br>'.$e->getMessage();
 					admin_mail($subject, $email, $headers, FALSE, 'admin/website_connect_error.tpl');
 					$success = FALSE;
