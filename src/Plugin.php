@@ -9,8 +9,8 @@ use Symfony\Component\EventDispatcher\GenericEvent;
  *
  * @package Detain\MyAdminWebhosting
  */
-class Plugin {
-
+class Plugin
+{
 	public static $name = 'Webhosting';
 	public static $description = 'Allows selling of Webhosting Module';
 	public static $help = '';
@@ -18,8 +18,8 @@ class Plugin {
 	public static $type = 'module';
 	public static $settings = [
 		'SERVICE_ID_OFFSET' => 1000,
-		'USE_REPEAT_INVOICE' => TRUE,
-		'USE_PACKAGES' => TRUE,
+		'USE_REPEAT_INVOICE' => true,
+		'USE_PACKAGES' => true,
 		'BILLING_DAYS_OFFSET' => 0,
 		'IMGNAME' => 'website.png',
 		'REPEAT_BILLING_METHOD' => PRORATE_BILLING,
@@ -38,13 +38,15 @@ class Plugin {
 	/**
 	 * Plugin constructor.
 	 */
-	public function __construct() {
+	public function __construct()
+	{
 	}
 
 	/**
 	 * @return array
 	 */
-	public static function getHooks() {
+	public static function getHooks()
+	{
 		return [
 			self::$module.'.load_processing' => [__CLASS__, 'loadProcessing'],
 			self::$module.'.settings' => [__CLASS__, 'getSettings']
@@ -54,14 +56,15 @@ class Plugin {
 	/**
 	 * @param \Symfony\Component\EventDispatcher\GenericEvent $event
 	 */
-	public static function loadProcessing(GenericEvent $event) {
+	public static function loadProcessing(GenericEvent $event)
+	{
 		/**
 		 * @var \ServiceHandler $service
 		 */
 		$service = $event->getSubject();
 		$service->setModule(self::$module)
-			->setEnable(function($service) {
-				$serviceTypes = run_event('get_service_types', FALSE, self::$module);
+			->setEnable(function ($service) {
+				$serviceTypes = run_event('get_service_types', false, self::$module);
 				$serviceInfo = $service->getServiceInfo();
 				$settings = get_module_settings(self::$module);
 				$db = get_module_db(self::$module);
@@ -69,8 +72,8 @@ class Plugin {
 				$GLOBALS['tf']->history->add($settings['PREFIX'], 'change_status', 'active', $serviceInfo[$settings['PREFIX'].'_id'], $serviceInfo[$settings['PREFIX'].'_custid']);
 				function_requirements('admin_email_website_pending_setup');
 				admin_email_website_pending_setup($serviceInfo[$settings['PREFIX'].'_id']);
-			})->setReactivate(function($service) {
-				$serviceTypes = run_event('get_service_types', FALSE, self::$module);
+			})->setReactivate(function ($service) {
+				$serviceTypes = run_event('get_service_types', false, self::$module);
 				$serviceInfo = $service->getServiceInfo();
 				$settings = get_module_settings(self::$module);
 				$db = get_module_db(self::$module);
@@ -80,12 +83,12 @@ class Plugin {
 				$smarty->assign('website_name', $serviceTypes[$serviceInfo[$settings['PREFIX'].'_type']]['services_name']);
 				$email = $smarty->fetch('email/admin/website_reactivated.tpl');
 				$subject = $serviceInfo[$settings['TITLE_FIELD']].' '.$serviceTypes[$serviceInfo[$settings['PREFIX'].'_type']]['services_name'].' '.$settings['TBLNAME'].' Re-Activated';
-				admin_mail($subject, $email, FALSE, FALSE, 'admin/website_reactivated.tpl');
-			})->setDisable(function($service) {
-			})->setTerminate(function($service) {
+				admin_mail($subject, $email, false, false, 'admin/website_reactivated.tpl');
+			})->setDisable(function ($service) {
+			})->setTerminate(function ($service) {
 				$serviceInfo = $service->getServiceInfo();
 				$settings = get_module_settings(self::$module);
-				$serviceTypes = run_event('get_service_types', FALSE, self::$module);
+				$serviceTypes = run_event('get_service_types', false, self::$module);
 				$class = '\\MyAdmin\\Orm\\'.get_orm_class_from_table($settings['TABLE']);
 				/** @var \MyAdmin\Orm\Product $class **/
 				$serviceClass = new $class();
@@ -97,7 +100,7 @@ class Plugin {
 					'category' => $serviceTypes[$serviceClass->getType()]['services_category'],
 					'email' => $GLOBALS['tf']->accounts->cross_reference($serviceClass->getCustid())
 				]);
-				$success = TRUE;
+				$success = true;
 				try {
 					$GLOBALS['tf']->dispatcher->dispatch(self::$module.'.terminate', $subevent);
 				} catch (\Exception $e) {
@@ -108,26 +111,26 @@ class Plugin {
 					$headers .= 'Content-type: text/html; charset=UTF-8'.PHP_EOL;
 					$headers .= 'From: '.$settings['TITLE'].' <'.$settings['EMAIL_FROM'].'>'.PHP_EOL;
 					$email = $subject.'<br>Username '.$serviceClass->getUsername().'<br>Server '.$serverData[$settings['PREFIX'].'_name'].'<br>'.$e->getMessage();
-					admin_mail($subject, $email, $headers, FALSE, 'admin/website_connect_error.tpl');
-					$success = FALSE;
+					admin_mail($subject, $email, $headers, false, 'admin/website_connect_error.tpl');
+					$success = false;
 				}
-				if ($success == TRUE && !$subevent->isPropagationStopped()) {
+				if ($success == true && !$subevent->isPropagationStopped()) {
 					myadmin_log(self::$module, 'error', 'Dont know how to deactivate '.$settings['TBLNAME'].' '.$serviceInfo[$settings['PREFIX'].'_id'].' Type '.$serviceTypes[$serviceClass->getType()]['services_type'].' Category '.$serviceTypes[$serviceClass->getType()]['services_category'], __LINE__, __FILE__);
-					$success = FALSE;
+					$success = false;
 				}
-				if ($success == TRUE) {
+				if ($success == true) {
 					$db = get_module_db(self::$module);
 					$serviceClass->setServerStatus('deleted')->save();
 					$db->query("update {$settings['TABLE']} set {$settings['PREFIX']}_server_status='deleted' where {$settings['PREFIX']}_id={$serviceInfo[$settings['PREFIX'].'_id']}", __LINE__, __FILE__);
 				}
 			})->register();
-
 	}
 
 	/**
 	 * @param \Symfony\Component\EventDispatcher\GenericEvent $event
 	 */
-	public static function getSettings(GenericEvent $event) {
+	public static function getSettings(GenericEvent $event)
+	{
 		/** @var \MyAdmin\Settings $settings **/
 		$settings = $event->getSubject();
 		$settings->add_dropdown_setting(self::$module, 'Out of Stock', 'outofstock_webhosting', 'Out Of Stock All Webhosting', 'Enable/Disable Sales Of This Type', $settings->get_setting('OUTOFSTOCK_WEBHOSTING'), ['0', '1'], ['No', 'Yes']);
