@@ -1,5 +1,5 @@
 {
-	"name": "detain/webhosting-module",
+	"name": "detain/myadmin-webhosting-module",
 	"type": "myadmin-plugin",
 	"description": "Webhosting Module for MyAdmin",
 	"keywords": [
