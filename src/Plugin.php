@@ -119,9 +119,8 @@ class Plugin
 					$success = false;
 				}
 				if ($success == true) {
-					$db = get_module_db(self::$module);
 					$serviceClass->setServerStatus('deleted')->save();
-					$db->query("update {$settings['TABLE']} set {$settings['PREFIX']}_server_status='deleted' where {$settings['PREFIX']}_id={$serviceInfo[$settings['PREFIX'].'_id']}", __LINE__, __FILE__);
+                    $GLOBALS['tf']->history->add($settings['TABLE'], 'change_server_status', 'deleted', $serviceInfo[$settings['PREFIX'].'_id'], $serviceInfo[$settings['PREFIX'].'_custid']);
 				}
 			})->register();
 	}
