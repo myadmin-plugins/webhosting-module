@@ -48,10 +48,33 @@ class Plugin
 	public static function getHooks()
 	{
 		return [
+            'api.register' => [__CLASS__, 'apiRegister'],
+            'function.requirements' => [__CLASS__, 'getRequirements'],
 			self::$module.'.load_processing' => [__CLASS__, 'loadProcessing'],
 			self::$module.'.settings' => [__CLASS__, 'getSettings']
 		];
 	}
+
+    /**
+     * @param \Symfony\Component\EventDispatcher\GenericEvent $event
+     */
+    public static function getRequirements(GenericEvent $event)
+    {
+        $loader = $event->getSubject();
+        $loader->add_requirement('api_place_buy_website','/../vendor/detain/myadmin-webhosting-module/src/api.php');
+        $loader->add_requirement('api_validate_buy_website','/../vendor/detain/myadmin-webhosting-module/src/api.php');
+    }
+    
+    /**
+     * @param \Symfony\Component\EventDispatcher\GenericEvent $event
+     */
+    public static function apiRegister(GenericEvent $event)
+    {
+        /**
+         * @var \ServiceHandler $subject
+         */
+        //$subject = $event->getSubject();
+    }    
 
 	/**
 	 * @param \Symfony\Component\EventDispatcher\GenericEvent $event
