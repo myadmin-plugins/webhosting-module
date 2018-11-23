@@ -105,7 +105,7 @@ class Plugin
 				$smarty = new \TFSmarty;
 				$smarty->assign('website_name', $serviceTypes[$serviceInfo[$settings['PREFIX'].'_type']]['services_name']);
 				$email = $smarty->fetch('email/admin/website_reactivated.tpl');
-				$subject = $serviceInfo[$settings['TITLE_FIELD']].' '.$serviceTypes[$serviceInfo[$settings['PREFIX'].'_type']]['services_name'].' '.$settings['TBLNAME'].' Re-Activated';
+				$subject = $serviceInfo[$settings['TITLE_FIELD']].' '.$serviceTypes[$serviceInfo[$settings['PREFIX'].'_type']]['services_name'].' '.$settings['TBLNAME'].' Reactivated';
 				admin_mail($subject, $email, false, false, 'admin/website_reactivated.tpl');
 			})->setDisable(function ($service) {
 			})->setTerminate(function ($service) {
