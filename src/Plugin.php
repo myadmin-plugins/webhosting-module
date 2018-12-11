@@ -155,10 +155,15 @@ class Plugin
 	{
 		/** @var \MyAdmin\Settings $settings **/
 		$settings = $event->getSubject();
+        $settings->setTarget('module');
 		$settings->add_dropdown_setting(self::$module, _('Out of Stock'), 'outofstock_webhosting', _('Out Of Stock All Webhosting'), _('Enable/Disable Sales Of This Type'), $settings->get_setting('OUTOFSTOCK_WEBHOSTING'), ['0', '1'], ['No', 'Yes']);
 		$settings->add_dropdown_setting(self::$module, _('Out of Stock'), 'outofstock_webhosting_demo', _('Out Of Stock Demo/Trial Webhosting'), _('Enable/Disable Sales Of This Type'), $settings->get_setting('OUTOFSTOCK_WEBHOSTING_DEMO'), ['0', '1'], ['No', 'Yes']);
 		$settings->add_dropdown_setting(self::$module, _('Out of Stock'), 'outofstock_webhosting_ispconfig', _('Out Of Stock ISPconfig Webhosting'), _('Enable/Disable Sales Of This Type'), $settings->get_setting('OUTOFSTOCK_WEBHOSTING_ISPCONFIG'), ['0', '1'], ['No', 'Yes']);
 		$settings->add_dropdown_setting(self::$module, _('Out of Stock'), 'outofstock_webhosting_ispmanager', _('Out Of Stock ISPmanager Webhosting'), _('Enable/Disable Sales Of This Type'), $settings->get_setting('OUTOFSTOCK_WEBHOSTING_ISPMANAGER'), ['0', '1'], ['No', 'Yes']);
+        $settings->add_master_checkbox_setting(self::$module, _('Server Settings'), self::$module, 'available', 'website_available', _('Auto-Setup'), '<p>Choose which servers are used for auto-server Setups.</p>');
+        $settings->add_master_text_setting(self::$module, _('Server Settings'), self::$module, 'key', 'website_key', _('API Key'), '<p>'._('The Key needed to connect.').'</p>');
+        //$settings->add_select_master_autosetup(self::$module, 'Auto-Setup Servers', self::$module, 'webhosting_setup_servers', _('Auto-Setup Servers'), '<p>Choose which servers are used for auto-server Setups.</p>');
+        $settings->setTarget('global');
 		$settings->add_dropdown_setting(self::$module, _('Costs & Limits'), 'website_limited_package_enable', _('Enable a Daily Limited Package'), _('Enable/Disable Limiting of a website package'), (defined('WEBSITE_LIMITED_PACKAGE_ENABLE') ? WEBSITE_LIMITED_PACKAGE_ENABLE : '0'), ['0', '1'], ['No', 'Yes']);
 		$settings->add_text_setting(self::$module, _('Costs & Limits'), 'website_limited_package', _('Daily Limited Package to Limit'), _('The Package ID to Limit per Day.'), (defined('WEBSITE_LIMITED_PACKAGE') ? WEBSITE_LIMITED_PACKAGE : 1003));
 		$settings->add_text_setting(self::$module, _('Costs & Limits'), 'website_limited_package_limit', _('Daily Limited Package Limit'), _('How many packages can be sold per day.'), (defined('WEBSITE_LIMITED_PACKAGE_LIMIT') ? WEBSITE_LIMITED_PACKAGE_LIMIT : 100));
@@ -166,8 +171,5 @@ class Plugin
 		$settings->add_text_setting(self::$module, _('Webhosting Demo'), 'website_demo_expire_days', _('Days before Demo Expires'), _('How many days a webhosting demo will be active before expiring.'), (defined('WEBSITE_DEMO_EXPIRE_DAYS') ? WEBSITE_DEMO_EXPIRE_DAYS : 14));
 		$settings->add_text_setting(self::$module, _('Webhosting Demo'), 'website_demo_warning_days', _('Days before Demo Sends Expiring Soon Mail'), _('How many days a webhosting demo will be active before sending out an expiring soon warning email.'), (defined('WEBSITE_DEMO_WARNING_DAYS') ? WEBSITE_DEMO_WARNING_DAYS : 10));
 		$settings->add_text_setting(self::$module, _('Webhosting Demo'), 'website_demo_extend_days', _('Days the demo is extended when extending the demo'), _('How many days a webhosting demo will be active before sending out an expiring soon warning email.'), (defined('WEBSITE_DEMO_EXTEND_DAYS') ? WEBSITE_DEMO_EXTEND_DAYS : 10));
-		$settings->add_master_checkbox_setting(self::$module, _('Server Settings'), self::$module, 'available', 'website_available', _('Auto-Setup'), '<p>Choose which servers are used for auto-server Setups.</p>');
-		$settings->add_master_text_setting(self::$module, _('Server Settings'), self::$module, 'key', 'website_key', _('API Key'), '<p>'._('The Key needed to connect.').'</p>');
-		//$settings->add_select_master_autosetup(self::$module, 'Auto-Setup Servers', self::$module, 'webhosting_setup_servers', _('Auto-Setup Servers'), '<p>Choose which servers are used for auto-server Setups.</p>');
 	}
 }
