@@ -127,7 +127,7 @@ class Plugin
 				try {
 					$GLOBALS['tf']->dispatcher->dispatch(self::$module.'.terminate', $subevent);
 				} catch (\Exception $e) {
-					myadmin_log('webhosting', 'info', 'Got Exception '.$e->getMessage(), __LINE__, __FILE__);
+					myadmin_log('webhosting', 'info', 'Got Exception '.$e->getMessage(), __LINE__, __FILE__, self::$module, $serviceClass->getId());
 					$serverData = get_service_master($serviceClass->getServer(), self::$module);
 					$subject = 'Cant Connect to Webhosting Server to Suspend';
 					$headers = 'MIME-Version: 1.0'.PHP_EOL;
