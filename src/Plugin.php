@@ -48,33 +48,33 @@ class Plugin
 	public static function getHooks()
 	{
 		return [
-            'api.register' => [__CLASS__, 'apiRegister'],
-            'function.requirements' => [__CLASS__, 'getRequirements'],
+			'api.register' => [__CLASS__, 'apiRegister'],
+			'function.requirements' => [__CLASS__, 'getRequirements'],
 			self::$module.'.load_processing' => [__CLASS__, 'loadProcessing'],
 			self::$module.'.settings' => [__CLASS__, 'getSettings']
 		];
 	}
 
-    /**
-     * @param \Symfony\Component\EventDispatcher\GenericEvent $event
-     */
-    public static function getRequirements(GenericEvent $event)
-    {
-        $loader = $event->getSubject();
-        $loader->add_requirement('api_place_buy_website','/../vendor/detain/myadmin-webhosting-module/src/api.php');
-        $loader->add_requirement('api_validate_buy_website','/../vendor/detain/myadmin-webhosting-module/src/api.php');
-    }
-    
-    /**
-     * @param \Symfony\Component\EventDispatcher\GenericEvent $event
-     */
-    public static function apiRegister(GenericEvent $event)
-    {
-        /**
-         * @var \ServiceHandler $subject
-         */
-        //$subject = $event->getSubject();
-    }    
+	/**
+	 * @param \Symfony\Component\EventDispatcher\GenericEvent $event
+	 */
+	public static function getRequirements(GenericEvent $event)
+	{
+		$loader = $event->getSubject();
+		$loader->add_requirement('api_place_buy_website', '/../vendor/detain/myadmin-webhosting-module/src/api.php');
+		$loader->add_requirement('api_validate_buy_website', '/../vendor/detain/myadmin-webhosting-module/src/api.php');
+	}
+	
+	/**
+	 * @param \Symfony\Component\EventDispatcher\GenericEvent $event
+	 */
+	public static function apiRegister(GenericEvent $event)
+	{
+		/**
+		 * @var \ServiceHandler $subject
+		 */
+		//$subject = $event->getSubject();
+	}
 
 	/**
 	 * @param \Symfony\Component\EventDispatcher\GenericEvent $event
@@ -143,7 +143,7 @@ class Plugin
 				}
 				if ($success == true) {
 					$serviceClass->setServerStatus('deleted')->save();
-                    $GLOBALS['tf']->history->add($settings['TABLE'], 'change_server_status', 'deleted', $serviceInfo[$settings['PREFIX'].'_id'], $serviceInfo[$settings['PREFIX'].'_custid']);
+					$GLOBALS['tf']->history->add($settings['TABLE'], 'change_server_status', 'deleted', $serviceInfo[$settings['PREFIX'].'_id'], $serviceInfo[$settings['PREFIX'].'_custid']);
 				}
 			})->register();
 	}
@@ -155,17 +155,17 @@ class Plugin
 	{
 		/** @var \MyAdmin\Settings $settings **/
 		$settings = $event->getSubject();
-        $settings->setTarget('module');
+		$settings->setTarget('module');
 		$settings->add_dropdown_setting(self::$module, _('Out of Stock'), 'outofstock_webhosting', _('Out Of Stock All Webhosting'), _('Enable/Disable Sales Of This Type'), $settings->get_setting('OUTOFSTOCK_WEBHOSTING'), ['0', '1'], ['No', 'Yes']);
 		$settings->add_dropdown_setting(self::$module, _('Out of Stock'), 'outofstock_webhosting_demo', _('Out Of Stock Demo/Trial Webhosting'), _('Enable/Disable Sales Of This Type'), $settings->get_setting('OUTOFSTOCK_WEBHOSTING_DEMO'), ['0', '1'], ['No', 'Yes']);
 		$settings->add_dropdown_setting(self::$module, _('Out of Stock'), 'outofstock_webhosting_ispconfig', _('Out Of Stock ISPconfig Webhosting'), _('Enable/Disable Sales Of This Type'), $settings->get_setting('OUTOFSTOCK_WEBHOSTING_ISPCONFIG'), ['0', '1'], ['No', 'Yes']);
 		$settings->add_dropdown_setting(self::$module, _('Out of Stock'), 'outofstock_webhosting_ispmanager', _('Out Of Stock ISPmanager Webhosting'), _('Enable/Disable Sales Of This Type'), $settings->get_setting('OUTOFSTOCK_WEBHOSTING_ISPMANAGER'), ['0', '1'], ['No', 'Yes']);
-        $settings->add_master_checkbox_setting(self::$module, _('Server Settings'), self::$module, 'available', 'website_available', _('Auto-Setup'), '<p>Choose which servers are used for auto-server Setups.</p>');
-        $settings->add_master_label(self::$module, 'Server Settings', self::$module, 'active_services', 'Active Websites', '<p>The current number of active Websites.</p>', 'count(websites.website_id) as active_services');
-        $settings->add_master_text_setting(self::$module, 'Server Settings', self::$module, 'max_sites', 'website_max_sites', 'Max Websites', '<p>The Maximum number of Websites that can be running on each server.</p>');
-        $settings->add_master_text_setting(self::$module, _('Server Settings'), self::$module, 'key', 'website_key', _('API Key'), '<p>'._('The Key needed to connect.').'</p>');
-        //$settings->add_select_master_autosetup(self::$module, 'Auto-Setup Servers', self::$module, 'webhosting_setup_servers', _('Auto-Setup Servers'), '<p>Choose which servers are used for auto-server Setups.</p>');
-        $settings->setTarget('global');
+		$settings->add_master_checkbox_setting(self::$module, _('Server Settings'), self::$module, 'available', 'website_available', _('Auto-Setup'), '<p>Choose which servers are used for auto-server Setups.</p>');
+		$settings->add_master_label(self::$module, 'Server Settings', self::$module, 'active_services', 'Active Websites', '<p>The current number of active Websites.</p>', 'count(websites.website_id) as active_services');
+		$settings->add_master_text_setting(self::$module, 'Server Settings', self::$module, 'max_sites', 'website_max_sites', 'Max Websites', '<p>The Maximum number of Websites that can be running on each server.</p>');
+		$settings->add_master_text_setting(self::$module, _('Server Settings'), self::$module, 'key', 'website_key', _('API Key'), '<p>'._('The Key needed to connect.').'</p>');
+		//$settings->add_select_master_autosetup(self::$module, 'Auto-Setup Servers', self::$module, 'webhosting_setup_servers', _('Auto-Setup Servers'), '<p>Choose which servers are used for auto-server Setups.</p>');
+		$settings->setTarget('global');
 		$settings->add_dropdown_setting(self::$module, _('Costs & Limits'), 'website_limited_package_enable', _('Enable a Daily Limited Package'), _('Enable/Disable Limiting of a website package'), (defined('WEBSITE_LIMITED_PACKAGE_ENABLE') ? WEBSITE_LIMITED_PACKAGE_ENABLE : '0'), ['0', '1'], ['No', 'Yes']);
 		$settings->add_text_setting(self::$module, _('Costs & Limits'), 'website_limited_package', _('Daily Limited Package to Limit'), _('The Package ID to Limit per Day.'), (defined('WEBSITE_LIMITED_PACKAGE') ? WEBSITE_LIMITED_PACKAGE : 1003));
 		$settings->add_text_setting(self::$module, _('Costs & Limits'), 'website_limited_package_limit', _('Daily Limited Package Limit'), _('How many packages can be sold per day.'), (defined('WEBSITE_LIMITED_PACKAGE_LIMIT') ? WEBSITE_LIMITED_PACKAGE_LIMIT : 100));
