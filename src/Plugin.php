@@ -163,7 +163,7 @@ class Plugin
 		$settings->add_master_checkbox_setting(self::$module, _('Server Settings'), self::$module, 'available', 'website_available', _('Auto-Setup'), '<p>Choose which servers are used for auto-server Setups.</p>');
 		$settings->add_master_label(self::$module, 'Server Settings', self::$module, 'active_services', 'Active Websites', '<p>The current number of active Websites.</p>', 'count(websites.website_id) as active_services');
 		$settings->add_master_text_setting(self::$module, 'Server Settings', self::$module, 'max_sites', 'website_max_sites', 'Max Websites', '<p>The Maximum number of Websites that can be running on each server.</p>');
-		$settings->add_master_text_setting(self::$module, _('Server Settings'), self::$module, 'key', 'website_key', _('API Key'), '<p>'._('The Key needed to connect.').'</p>');
+		//$settings->add_master_text_setting(self::$module, _('Server Settings'), self::$module, 'key', 'website_key', _('API Key'), '<p>'._('The Key needed to connect.').'</p>');
 		//$settings->add_select_master_autosetup(self::$module, 'Auto-Setup Servers', self::$module, 'webhosting_setup_servers', _('Auto-Setup Servers'), '<p>Choose which servers are used for auto-server Setups.</p>');
 		$settings->setTarget('global');
 		$settings->add_dropdown_setting(self::$module, _('Costs & Limits'), 'website_limited_package_enable', _('Enable a Daily Limited Package'), _('Enable/Disable Limiting of a website package'), (defined('WEBSITE_LIMITED_PACKAGE_ENABLE') ? WEBSITE_LIMITED_PACKAGE_ENABLE : '0'), ['0', '1'], ['No', 'Yes']);
