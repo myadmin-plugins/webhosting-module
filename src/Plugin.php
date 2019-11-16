@@ -106,7 +106,7 @@ class Plugin
 				$smarty->assign('website_name', $serviceTypes[$serviceInfo[$settings['PREFIX'].'_type']]['services_name']);
 				$email = $smarty->fetch('email/admin/website_reactivated.tpl');
 				$subject = $serviceInfo[$settings['TITLE_FIELD']].' '.$serviceTypes[$serviceInfo[$settings['PREFIX'].'_type']]['services_name'].' '.$settings['TBLNAME'].' Reactivated';
-				(new MyAdmin\Mail())->adminMail($subject, $email, false, 'admin/website_reactivated.tpl');
+				(new \MyAdmin\Mail())->adminMail($subject, $email, false, 'admin/website_reactivated.tpl');
 			})->setDisable(function ($service) {
 			})->setTerminate(function ($service) {
 				$serviceInfo = $service->getServiceInfo();
@@ -131,7 +131,7 @@ class Plugin
 					$serverData = get_service_master($serviceClass->getServer(), self::$module);
 					$subject = 'Cant Connect to Webhosting Server to Suspend';
 					$email = $subject.'<br>Username '.$serviceClass->getUsername().'<br>Server '.$serverData[$settings['PREFIX'].'_name'].'<br>'.$e->getMessage();
-					(new MyAdmin\Mail())->adminMail($subject, $email, false, 'admin/website_connect_error.tpl');
+					(new \MyAdmin\Mail())->adminMail($subject, $email, false, 'admin/website_connect_error.tpl');
 					$success = false;
 				}
 				if ($success == true && !$subevent->isPropagationStopped()) {
