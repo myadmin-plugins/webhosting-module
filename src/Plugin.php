@@ -125,7 +125,7 @@ class Plugin
 				]);
 				$success = true;
 				try {
-					$GLOBALS['tf']->dispatcher->dispatch(self::$module.'.terminate', $subevent);
+					$GLOBALS['tf']->dispatcher->dispatch($subevent, self::$module.'.terminate');
 				} catch (\Exception $e) {
 					myadmin_log('webhosting', 'info', 'Got Exception '.$e->getMessage(), __LINE__, __FILE__, self::$module, $serviceClass->getId());
 					$serverData = get_service_master($serviceClass->getServer(), self::$module);
