@@ -64,7 +64,7 @@ class Plugin
 		$loader->add_requirement('api_place_buy_website', '/../vendor/detain/myadmin-webhosting-module/src/api.php');
 		$loader->add_requirement('api_validate_buy_website', '/../vendor/detain/myadmin-webhosting-module/src/api.php');
 	}
-	
+
 	/**
 	 * @param \Symfony\Component\EventDispatcher\GenericEvent $event
 	 */
