@@ -168,6 +168,7 @@ class Plugin
         $settings->add_master_label(self::$module, 'Server Settings', self::$module, 'active_services', 'Active Websites', '<p>The current number of active Websites.</p>', 'count(websites.website_id) as active_services');
         $settings->add_master_label(self::$module, 'Server Settings', self::$module, 'hdfree', 'HD GB Free', '<p>The total free GB.</p>', 'website_hdfree as hdfree');
         $settings->add_master_text_setting(self::$module, 'Server Settings', self::$module, 'max_sites', 'website_max_sites', 'Max Websites', '<p>The Maximum number of Websites that can be running on each server.</p>');
+        $settings->add_master_label(self::$module, 'Server Settings', self::$module, 'load', 'Server load', '<p>Server Load</p>', 'website_load as `load`');
         //$settings->add_master_text_setting(self::$module, _('Server Settings'), self::$module, 'key', 'website_key', _('API Key'), '<p>'._('The Key needed to connect.').'</p>');
         //$settings->add_select_master_autosetup(self::$module, 'Auto-Setup Servers', self::$module, 'webhosting_setup_servers', _('Auto-Setup Servers'), '<p>Choose which servers are used for auto-server Setups.</p>');
         $settings->setTarget('global');
