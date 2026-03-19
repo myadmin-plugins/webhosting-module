@@ -1,28 +1,42 @@
-# Webhosting Module for MyAdmin
+# MyAdmin Webhosting Module
 
-Webhosting Module for MyAdmin
+[![Tests](https://github.com/detain/myadmin-webhosting-module/actions/workflows/tests.yml/badge.svg)](https://github.com/detain/myadmin-webhosting-module/actions/workflows/tests.yml)
+[![Latest Stable Version](https://poser.pugx.org/detain/myadmin-webhosting-module/version)](https://packagist.org/packages/detain/myadmin-webhosting-module)
+[![Total Downloads](https://poser.pugx.org/detain/myadmin-webhosting-module/downloads)](https://packagist.org/packages/detain/myadmin-webhosting-module)
+[![License](https://poser.pugx.org/detain/myadmin-webhosting-module/license)](https://packagist.org/packages/detain/myadmin-webhosting-module)
 
-## Build Status and Code Analysis
+Webhosting service module for the [MyAdmin](https://github.com/detain/myadmin) multiserver control panel. Provides automated lifecycle management of shared hosting accounts -- provisioning, suspension, reactivation, and termination -- across multiple hosting platforms including ISPconfig and ISPmanager.
 
-Site          | Status
---------------|---------------------------
-![Travis-CI](http://i.is.cc/storage/GYd75qN.png "Travis-CI")     | [![Build Status](https://travis-ci.org/detain/myadmin-webhosting-module.svg?branch=master)](https://travis-ci.org/detain/myadmin-webhosting-module)
-![CodeClimate](http://i.is.cc/storage/GYlageh.png "CodeClimate")  | [![Code Climate](https://codeclimate.com/github/detain/myadmin-webhosting-module/badges/gpa.svg)](https://codeclimate.com/github/detain/myadmin-webhosting-module) [![Test Coverage](https://codeclimate.com/github/detain/myadmin-webhosting-module/badges/coverage.svg)](https://codeclimate.com/github/detain/myadmin-webhosting-module/coverage) [![Issue Count](https://codeclimate.com/github/detain/myadmin-webhosting-module/badges/issue_count.svg)](https://codeclimate.com/github/detain/myadmin-webhosting-module)
-![Scrutinizer](http://i.is.cc/storage/GYeUnux.png "Scrutinizer")   | [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/myadmin-plugins/webhosting-module/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/myadmin-plugins/webhosting-module/?branch=master) [![Code Coverage](https://scrutinizer-ci.com/g/myadmin-plugins/webhosting-module/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/myadmin-plugins/webhosting-module/?branch=master) [![Build Status](https://scrutinizer-ci.com/g/myadmin-plugins/webhosting-module/badges/build.png?b=master)](https://scrutinizer-ci.com/g/myadmin-plugins/webhosting-module/build-status/master)
-![Codacy](http://i.is.cc/storage/GYi66Cx.png "Codacy")        | [![Codacy Badge](https://api.codacy.com/project/badge/Grade/226251fc068f4fd5b4b4ef9a40011d06)](https://www.codacy.com/app/detain/myadmin-webhosting-module) [![Codacy Badge](https://api.codacy.com/project/badge/Coverage/25fa74eb74c947bf969602fcfe87e349)](https://www.codacy.com/app/detain/myadmin-webhosting-module?utm_source=github.com&utm_medium=referral&utm_content=detain/myadmin-webhosting-module&utm_campaign=Badge_Coverage)
-![Coveralls](http://i.is.cc/storage/GYjNSim.png "Coveralls")    | [![Coverage Status](https://coveralls.io/repos/github/detain/db_abstraction/badge.svg?branch=master)](https://coveralls.io/github/detain/myadmin-webhosting-module?branch=master)
-![Packagist](http://i.is.cc/storage/GYacBEX.png "Packagist")     | [![Latest Stable Version](https://poser.pugx.org/detain/myadmin-webhosting-module/version)](https://packagist.org/packages/detain/myadmin-webhosting-module) [![Total Downloads](https://poser.pugx.org/detain/myadmin-webhosting-module/downloads)](https://packagist.org/packages/detain/myadmin-webhosting-module) [![Latest Unstable Version](https://poser.pugx.org/detain/myadmin-webhosting-module/v/unstable)](//packagist.org/packages/detain/myadmin-webhosting-module) [![Monthly Downloads](https://poser.pugx.org/detain/myadmin-webhosting-module/d/monthly)](https://packagist.org/packages/detain/myadmin-webhosting-module) [![Daily Downloads](https://poser.pugx.org/detain/myadmin-webhosting-module/d/daily)](https://packagist.org/packages/detain/myadmin-webhosting-module) [![License](https://poser.pugx.org/detain/myadmin-webhosting-module/license)](https://packagist.org/packages/detain/myadmin-webhosting-module)
+## Features
 
+- Event-driven architecture using Symfony EventDispatcher
+- Automated service provisioning with configurable server selection
+- Suspension and reactivation workflows with admin email notifications
+- Graceful termination with error handling and fallback notifications
+- Configurable billing integration (prorate billing, repeat invoices)
+- Out-of-stock controls per hosting platform type
+- Demo/trial hosting with configurable expiration and extension periods
+- Daily package sale limiting with multiplier support
+
+## Requirements
+
+- PHP 8.2 or higher
+- ext-soap
+- Symfony EventDispatcher 5.x, 6.x, or 7.x
 
 ## Installation
-
-Install with composer like
 
 ```sh
 composer require detain/myadmin-webhosting-module
 ```
 
+## Testing
+
+```sh
+composer install
+vendor/bin/phpunit
+```
+
 ## License
 
-The Webhosting Module for MyAdmin class is licensed under the LGPL-v2.1 license.
-
+Licensed under the [LGPL-2.1](https://www.gnu.org/licenses/old-licenses/lgpl-2.1.en.html).
