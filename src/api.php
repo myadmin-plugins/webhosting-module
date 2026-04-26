@@ -20,7 +20,7 @@
 */
 function api_place_buy_website($service_type, $period, $hostname, $coupon, $password, $script = 0)
 {
-    $custid = get_custid($GLOBALS['tf']->session->account_id, 'vps');
+    $custid = get_custid(\MyAdmin\App::session()->account_id, 'vps');
     function_requirements('validate_buy_website');
     [$continue, $errors, $period, $coupon, $coupon_code, $service_type, $service_cost, $original_cost, $repeat_service_cost, $custid, $hostname, $password] = validate_buy_website($custid, $period, $coupon, $tos, $service_type, $hostname, $password, $script);
     if ($continue === true) {
@@ -49,7 +49,7 @@ function api_place_buy_website($service_type, $period, $hostname, $coupon, $pass
 */
 function api_validate_buy_website($period, $coupon, $tos, $service_type, $hostname, $password, $script)
 {
-    $custid = get_custid($GLOBALS['tf']->session->account_id, 'vps');
+    $custid = get_custid(\MyAdmin\App::session()->account_id, 'vps');
     function_requirements('validate_buy_website');
     [$continue, $errors, $period, $coupon, $coupon_code, $service_type, $service_cost, $original_cost, $repeat_service_cost, $custid, $hostname, $password] = validate_buy_website($custid, $period, $coupon, $tos, $service_type, $hostname, $password, $script);
     $return = [];

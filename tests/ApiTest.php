@@ -264,7 +264,7 @@ class ApiTest extends TestCase
      */
     public function testBothFunctionsAccessGlobalSession(): void
     {
-        $count = substr_count(self::$apiContent, "get_custid(\$GLOBALS['tf']->session->account_id, 'vps')");
+        $count = substr_count(self::$apiContent, "get_custid(\\MyAdmin\App::session()->account_id, 'vps')");
         $this->assertSame(2, $count, 'Both API functions should call get_custid via global session.');
     }
 

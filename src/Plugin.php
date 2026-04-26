@@ -92,7 +92,7 @@ class Plugin
                 $settings = get_module_settings(self::$module);
                 $db = get_module_db(self::$module);
                 $db->query("update {$settings['TABLE']} set {$settings['PREFIX']}_status='active' where {$settings['PREFIX']}_id='{$serviceInfo[$settings['PREFIX'].'_id']}'", __LINE__, __FILE__);
-                $GLOBALS['tf']->history->add($settings['TABLE'], 'change_status', 'active', $serviceInfo[$settings['PREFIX'].'_id'], $serviceInfo[$settings['PREFIX'].'_custid']);
+                \MyAdmin\App::history()->add($settings['TABLE'], 'change_status', 'active', $serviceInfo[$settings['PREFIX'].'_id'], $serviceInfo[$settings['PREFIX'].'_custid']);
                 function_requirements('admin_email_website_pending_setup');
                 admin_email_website_pending_setup($serviceInfo[$settings['PREFIX'].'_id']);
             })->setReactivate(function ($service) {
@@ -100,7 +100,7 @@ class Plugin
                 $serviceInfo = $service->getServiceInfo();
                 $settings = get_module_settings(self::$module);
                 $db = get_module_db(self::$module);
-                $GLOBALS['tf']->history->add($settings['TABLE'], 'change_status', 'active', $serviceInfo[$settings['PREFIX'].'_id'], $serviceInfo[$settings['PREFIX'].'_custid']);
+                \MyAdmin\App::history()->add($settings['TABLE'], 'change_status', 'active', $serviceInfo[$settings['PREFIX'].'_id'], $serviceInfo[$settings['PREFIX'].'_custid']);
                 $db->query("update {$settings['TABLE']} set {$settings['PREFIX']}_status='active' where {$settings['PREFIX']}_id='{$serviceInfo[$settings['PREFIX'].'_id']}'", __LINE__, __FILE__);
                 $smarty = new \TFSmarty();
                 $smarty->assign('website_name', $serviceTypes[$serviceInfo[$settings['PREFIX'].'_type']]['services_name']);
@@ -121,11 +121,11 @@ class Plugin
                     'field2' => $serviceTypes[$serviceClass->getType()]['services_field2'],
                     'type' => $serviceTypes[$serviceClass->getType()]['services_type'],
                     'category' => $serviceTypes[$serviceClass->getType()]['services_category'],
-                    'email' => $GLOBALS['tf']->accounts->cross_reference($serviceClass->getCustid())
+                    'email' => \MyAdmin\App::accounts()->cross_reference($serviceClass->getCustid())
                 ]);
                 $success = true;
                 try {
-                    $GLOBALS['tf']->dispatcher->dispatch($subevent, self::$module.'.terminate');
+                    \MyAdmin\App::events()->dispatch($subevent, self::$module.'.terminate');
                 } catch (\Exception $e) {
                     myadmin_log('webhosting', 'info', 'Got Exception '.$e->getMessage(), __LINE__, __FILE__, self::$module, $serviceClass->getId());
                     $serverData = get_service_master($serviceClass->getServer(), self::$module);
@@ -140,7 +140,7 @@ class Plugin
                 }
                 if ($success == true) {
                     $serviceClass->setServerStatus('deleted')->save();
-                    $GLOBALS['tf']->history->add($settings['TABLE'], 'change_server_status', 'deleted', $serviceInfo[$settings['PREFIX'].'_id'], $serviceInfo[$settings['PREFIX'].'_custid']);
+                    \MyAdmin\App::history()->add($settings['TABLE'], 'change_server_status', 'deleted', $serviceInfo[$settings['PREFIX'].'_id'], $serviceInfo[$settings['PREFIX'].'_custid']);
                 }
             })->register();
     }
