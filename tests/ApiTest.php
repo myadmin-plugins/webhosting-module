@@ -258,7 +258,7 @@ class ApiTest extends TestCase
     }
 
     /**
-     * Test that both API functions access the global $tf session for custid.
+     * Test that both API functions access the App session for custid.
      *
      * @return void
      */
