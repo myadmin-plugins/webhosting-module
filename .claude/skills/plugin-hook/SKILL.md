@@ -1,6 +1,6 @@
 ---
 name: plugin-hook
-description: Adds a new event hook to src/Plugin.php::getHooks() and implements the corresponding static handler accepting a GenericEvent. Follows the run_event() / get_module_settings() / get_module_db() pattern used in loadProcessing(). Use when user says 'add hook', 'listen to event', 'handle dispatcher event', or adds a new event name. Do NOT use for modifying existing lifecycle callbacks already in loadProcessing() (setEnable, setReactivate, setDisable, setTerminate). NOTE: for a plugin's contract/behavioral tests (tests/ContractTest.php, the shared harness, composer myadmin:scaffold-tests) use the plugin-contract-tests skill instead — this skill's reflection-only guidance predates that harness.
+description: Adds a new event hook to src/Plugin.php::getHooks() and implements the corresponding static handler accepting a GenericEvent. Follows the run_event() / get_module_settings() / get_module_db() pattern used in loadProcessing(). Use when user says 'add hook', 'listen to event', 'handle dispatcher event', or adds a new event name. Do NOT use for modifying existing lifecycle callbacks already in loadProcessing() (setEnable, setReactivate, setDisable, setTerminate). For a plugin's contract or behavioral tests (tests/ContractTest.php, the shared harness, composer myadmin:scaffold-tests) use the plugin-contract-tests skill instead — this skill's reflection-only guidance predates that harness.
 ---
 <!-- myadmin-contract-harness-notice -->
 > ### ⚠️ Read this before the rest of the file

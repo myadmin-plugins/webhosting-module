@@ -1,6 +1,6 @@
 ---
 name: phpunit-test
-description: Writes PHPUnit 9 tests in `tests/` under namespace `Detain\MyAdminWebhosting\Tests\`. Follows ApiTest.php static string-inspection pattern for `src/api.php` and PluginTest.php ReflectionClass pattern for `src/Plugin.php`. Use when user says 'write test', 'add test case', 'test this function', 'add coverage'. Do NOT use for integration tests that require a live database or MyAdmin framework bootstrap. NOTE: for a plugin's contract/behavioral tests (tests/ContractTest.php, the shared harness, composer myadmin:scaffold-tests) use the plugin-contract-tests skill instead — this skill's reflection-only guidance predates that harness.
+description: Writes PHPUnit 9 tests in `tests/` under namespace `Detain\MyAdminWebhosting\Tests\`. Follows ApiTest.php static string-inspection pattern for `src/api.php` and PluginTest.php ReflectionClass pattern for `src/Plugin.php`. Use when user says 'write test', 'add test case', 'test this function', 'add coverage'. Do NOT use for integration tests that require a live database or MyAdmin framework bootstrap. For a plugin's contract or behavioral tests (tests/ContractTest.php, the shared harness, composer myadmin:scaffold-tests) use the plugin-contract-tests skill instead — this skill's reflection-only guidance predates that harness.
 ---
 <!-- myadmin-contract-harness-notice -->
 > ### ⚠️ Read this before the rest of the file
