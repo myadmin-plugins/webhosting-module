@@ -94,6 +94,31 @@ class ApiTest extends TestCase
         $this->assertStringContainsString('function api_validate_buy_website', self::$apiContent);
     }
 
+    /**
+     * api_place_buy_website() must hand validate_buy_website() a literal TOS agreement.
+     *
+     * It used to pass $tos, which that function never declares as a parameter and never
+     * assigns -- so it arrived as null, cast to '', and failed validate_buy_website()'s
+     * `in_array(strtolower($tos), ['yes', 'true'])` check on every single call. The function
+     * could not place an order at all; it returned "You must agree to the terms of service"
+     * every time. Nothing reported that, because the failure looked like an ordinary
+     * validation error rather than a defect.
+     *
+     * Asserted on the source rather than by calling it, because reaching the check needs the
+     * whole MyAdmin order stack. The regression this guards against is textual anyway: someone
+     * reinstating the variable.
+     *
+     * @return void
+     */
+    public function testPlaceBuyWebsitePassesALiteralTosAgreement(): void
+    {
+        $this->assertMatchesRegularExpression(
+            '/validate_buy_website\(\$custid, \$period, \$coupon, \x27(yes|true)\x27,/',
+            self::$apiContent,
+            'api_place_buy_website() must pass a literal TOS agreement; an undefined $tos fails validation every time'
+        );
+    }
+
     // ---------------------------------------------------------------
     // Function Signature Static Analysis (via token parsing)
     // ---------------------------------------------------------------
