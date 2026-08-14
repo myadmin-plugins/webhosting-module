@@ -74,6 +74,18 @@ class Plugin
          * @var \ServiceHandler $subject
          */
         //$subject = $event->getSubject();
+        api_register(
+            'api_validate_buy_website',
+            ['period' => 'int', 'coupon' => 'string', 'tos' => 'string', 'service_type' => 'int', 'hostname' => 'string', 'password' => 'string', 'script' => 'int'],
+            ['return' => 'result_status'],
+            'Checks whether the parameters for a webhosting order pass validation, and reports any errors, without placing the order.'
+        );
+        api_register(
+            'api_place_buy_website',
+            ['service_type' => 'int', 'period' => 'int', 'hostname' => 'string', 'coupon' => 'string', 'password' => 'string', 'script' => 'int'],
+            ['return' => 'result_status'],
+            'Places a webhosting order. Takes the same parameters as api_validate_buy_website; status_text carries the new service id on success.'
+        );
     }
 
     /**
